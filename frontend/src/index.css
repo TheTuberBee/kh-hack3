@@ -13,7 +13,7 @@ body {
 }
 
 .fadeDown {
-  animation: fadeUp 1s forwards;
+  animation: fadeDown 1s forwards;
   animation-delay: 0.5s;
 }
 
@@ -27,9 +27,24 @@ body {
   animation-delay: 0.5s;
 }
 
-@keyframes fadeUp {
+.fadeUp {
+  animation: fadeUp 1s forwards;
+  animation-delay: 0.5s;
+}
+
+@keyframes fadeDown {
   0% {
     transform: translateY(-15rem);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeUp {
+  0% {
+    transform: translateY(15rem);
   }
   100% {
     opacity: 1;
