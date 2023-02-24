@@ -4,5 +4,55 @@
 
 body {
   box-sizing: border-box;
-  background-color: #075985;
+  background: linear-gradient(to left, #0891b2, #1e40af);
+}
+
+#mainTitle {
+  -webkit-text-stroke: 2px white;
+  color: transparent;
+}
+
+.fadeDown {
+  animation: fadeUp 1s forwards;
+  animation-delay: 0.5s;
+}
+
+.fadeLeft {
+  animation: fadeLeft 1s forwards;
+  animation-delay: 0.5s;
+}
+
+.fadeRight {
+  animation: fadeRight 1s forwards;
+  animation-delay: 0.5s;
+}
+
+@keyframes fadeUp {
+  0% {
+    transform: translateY(-15rem);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeLeft {
+  0% {
+    transform: translateX(-15rem);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeRight {
+  0% {
+    transform: translateX(15rem);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }

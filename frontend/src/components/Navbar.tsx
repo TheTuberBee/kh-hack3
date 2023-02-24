@@ -19,7 +19,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="relative flex flex-wrap items-center bg-sky-900 justify-between px-2 py-3 mb-3">
+      <nav className="relative flex flex-wrap items-center bg-tansparent justify-between px-2 py-3 mb-3">
         <div className="container px-4 mx-auto flex flex-wrap items-center justify-between">
           <div className="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
             <Link
@@ -48,14 +48,14 @@ export default function Navbar() {
                 <>
                   <li className="w-full flex justify-center my-4 lg:my-0">
                     <Link to="/login">
-                      <button className="p-2 px-5 bg-sky-600 text-white font-bold rounded-lg hover:bg-sky-700">
+                      <button className="p-2 px-5 bg-sky-800 text-white font-bold rounded-lg hover:bg-sky-700">
                         Login
                       </button>
                     </Link>
                   </li>
                   <li className="w-full flex justify-center">
                     <Link to="/register">
-                      <button className="p-2 px-5 bg-sky-600 text-white font-bold rounded-lg hover:bg-sky-700">
+                      <button className="p-2 px-5 bg-sky-800 text-white font-bold rounded-lg hover:bg-sky-700">
                         Register
                       </button>
                     </Link>
@@ -65,12 +65,15 @@ export default function Navbar() {
                 <>
                   <li className="w-full flex justify-center items-center my-4 lg:my-0 lg:-mr-12">
                     <Link to="/profile" className="text-white text-2xl">
+                      <span className="text-white text-lg mr-2 lg:hidden">
+                        Account{" "}
+                      </span>
                       <i className="fas fa-user"></i>
                     </Link>
                   </li>
                   <li className="w-full flex justify-center">
                     <button
-                      className="p-2 px-5 bg-sky-600 text-white font-bold rounded-lg hover:bg-sky-700"
+                      className="p-2 px-5 bg-sky-800 text-white font-bold rounded-lg hover:bg-sky-700"
                       onClick={handleLogout}
                     >
                       Logout
