@@ -59,6 +59,15 @@ print(match_ids)
 match = get_match_by_id(match_ids[0])
 print(match)
 
+users_a = []
+users_b = []
+
+for participant in match["info"]["participants"]:
+    if participant["teamId"] == 100:
+        users_a.append(participant)
+    else:
+        users_b.append(participant)
+        
 for team in match["info"]["teams"]:
     if team["win"]:
         winner_team = team["teamId"]
