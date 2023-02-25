@@ -277,16 +277,13 @@ def fix():
 @app.get("/teammate_finder")
 @cross_origin()
 def teammate_finder_get():
-    rank: str = request.args.get("rank", type = str)
-    position: str = request.args.get("position", type = str)
-
-    """# authenticate
+    # authenticate
     perms = authenticate()
 
     if perms.user_id is None:
-        return "Unauthorized.", HTTPStatus.UNAUTHORIZED"""
+        return "Unauthorized.", HTTPStatus.UNAUTHORIZED
     
-    user_id = "63fa5b49a7cc7c02a8d85ea5"
+    user_id = perms.user_id
 
     player_filter = lambda player: True
     match_filter = lambda match: True
@@ -294,17 +291,75 @@ def teammate_finder_get():
 
     all_players_data = Match.analyze(player_filter, match_filter, game)["players"]
 
-    elo = 0
+    print(all_players_data)
+
+    player_data = None
+
+    index = 0
 
     # find the player in the all_players_data
     for player in all_players_data:
         if player["id"] == user_id:
-            elo = player["rating"]
+            player_data= player
+            print(player["name"])
+
+            # split the list into two parts and remove the player
+            before_player = all_players_data[:index]
+            after_player = all_players_data[index + 1:]
+
             break
+        index += 1
 
-    find_teammate = Matchmaking(user_id, position, elo, "DMG", "europe", "english")
-    in_queue = find_teammate.join_single_queue("JUNGLE")
+    print(before_player)
+    print(after_player)
 
-    print(in_queue, "in queue")
+    # create the data for the frontend list
+    # data needed: name, elo, email, killcount, deathcount, assistcount
 
-    return in_queue
+    # create the list of players
+    players = []
+
+    # add the players before the player
+    for player in before_player:
+        # get user's email from the database using the player's id
+        user = User.objects(pk = player["id"])[0]
+
+
+        players.append({
+            "name": player["name"],
+            "elo": player["rating"],
+            "email": user.email,
+            "killcount": player["factors"][8],
+            "deathcount": player["factors"][2],
+            "assistcount": player["factors"][0]
+        })
+
+    # get player's email from the database
+    user = User.objects(pk = user_id)[0]
+
+    # add the player
+    players.append({
+        "name": "You",
+        "elo": player_data["rating"],
+        "email": user.email,
+        "killcount": player_data["factors"][8],
+        "deathcount": player_data["factors"][2],
+        "assistcount": player_data["factors"][0]
+    })
+
+    # add the players after the player 
+    for player in after_player:  
+        # get user's email from the database using the player's id
+        user = User.objects(pk = player["id"])[0]
+
+        players.append({
+            "name": player["name"],
+            "elo": player["rating"],
+            "email": user.email,
+            "killcount": player["factors"][8],
+            "deathcount": player["factors"][2],
+            "assistcount": player["factors"][0]
+        })  
+
+
+    return jsonify(players)

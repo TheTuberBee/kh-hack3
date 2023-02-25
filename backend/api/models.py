@@ -282,12 +282,3 @@ def test_leaderboard():
 
     scoreboard = Match.analyze(player_filter, match_filter, game)
     print(scoreboard)
-
-class SinglePool(mongo.Document):
-    user_id = mongo.StringField()
-    position = mongo.StringField()
-    rank = mongo.StringField()
-    elo = mongo.IntField()
-    region = mongo.StringField()
-    language = mongo.StringField()
-    last_modified = mongo.IntField()
