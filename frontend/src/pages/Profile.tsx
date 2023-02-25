@@ -49,16 +49,6 @@ export const optionsBar = {
   },
 };
 
-const labelsBar = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-];
-
 const labels = [
   "Monday",
   "Thuesday",
