@@ -319,8 +319,12 @@ def teammate_finder_get():
     # create the list of players
     players = []
 
+    index = 0
     # add the players before the player
     for player in before_player:
+        if index >= 5:
+            break
+
         # get user's email from the database using the player's id
         user = User.objects(pk = player["id"])[0]
 
@@ -333,6 +337,7 @@ def teammate_finder_get():
             "deathcount": player["factors"][2],
             "assistcount": player["factors"][0]
         })
+        index += 1
 
     # get player's email from the database
     user = User.objects(pk = user_id)[0]
@@ -347,8 +352,13 @@ def teammate_finder_get():
         "assistcount": player_data["factors"][0]
     })
 
+    index = 0
+
     # add the players after the player 
     for player in after_player:  
+        if index >= 5:
+            break
+
         # get user's email from the database using the player's id
         user = User.objects(pk = player["id"])[0]
 
@@ -360,6 +370,8 @@ def teammate_finder_get():
             "deathcount": player["factors"][2],
             "assistcount": player["factors"][0]
         })  
+
+        index += 1
 
 
     return jsonify(players)
