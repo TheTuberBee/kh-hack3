@@ -113,6 +113,7 @@ def user_post():
     if staff is not None:
         user.staff = staff
     user.last_modified = int(time.time())
+    user.selectedGames = []
 
     user.save()
     return "", HTTPStatus.CREATED
@@ -136,3 +137,21 @@ def user_get(id):
         "name": user.name,
         "staff": user.staff,
     }
+
+@app.post("/games")
+@cross_origin()
+def games_post():
+     uid : str = request.args.get("uid", type = str)
+     game : str = request.args.get("game", type = str)
+
+     user = User.objects(pk = uid)[0]
+   
+     user.selectedGames.append(game)
+
+     user.save()
+     
+     return "", HTTPStatus.CREATED
+
+     
+     
+
