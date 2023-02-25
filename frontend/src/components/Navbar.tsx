@@ -10,6 +10,7 @@ export default function Navbar() {
 
   const handleLogout = () => {
     localStorage.removeItem("uid");
+    localStorage.removeItem("token");
     navigate("/login");
     window.location.reload();
   };
