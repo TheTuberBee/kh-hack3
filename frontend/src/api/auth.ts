@@ -8,7 +8,7 @@ export const login = async (email: string, password: string) => {
 
     return response;
   } catch (error) {
-    throw error;
+    return error;
   }
 };
 
@@ -31,6 +31,6 @@ export const register = async (
       return response;
     }
   } catch (error) {
-    throw error;
+    return error;
   }
 };
