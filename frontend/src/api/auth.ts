@@ -2,7 +2,9 @@ import axios from "../config/axios";
 
 export const login = async (email: string, password: string) => {
   try {
-    const response = await axios.post("/api/login", { email, password });
+    const response = await axios.get("/api/login", {
+      params: { email, password },
+    });
     return response.data;
   } catch (error) {
     throw error;
@@ -16,9 +18,7 @@ export const register = async (
 ) => {
   try {
     const response = await axios.post("/api/register", {
-      name,
-      email,
-      password,
+      params: { name, email, password },
     });
     return response.data;
   } catch (error) {
