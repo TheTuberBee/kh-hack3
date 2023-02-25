@@ -287,8 +287,8 @@ def teammate_finder_get():
     # authenticate
     perms = authenticate()
 
-    if perms.user_id is None:
-        return "Unauthorized.", HTTPStatus.UNAUTHORIZED
+    #if perms.user_id is None:
+    #   return "Unauthorized.", HTTPStatus.UNAUTHORIZED
     
     user_id = perms.user_id
 
@@ -297,8 +297,6 @@ def teammate_finder_get():
     game = Game.objects(pk = "63fa20423cab53f5ff515119")[0]
 
     all_players_data = Match.analyze(player_filter, match_filter, game)["players"]
-
-    print(all_players_data)
 
     player_data = None
 
@@ -317,8 +315,6 @@ def teammate_finder_get():
             break
         index += 1
 
-    print(before_player)
-    print(after_player)
 
     # create the data for the frontend list
     # data needed: name, elo, email, killcount, deathcount, assistcount

@@ -36,3 +36,14 @@ export const getAIResponse = async (gameId: number, userId: string) => {
     return error;
   }
 };
+
+export const getPossibleFriends = async () => {
+  try {
+    const response = await axios.get("/teammate_finder");
+    console.log(response);
+
+    return response;
+  } catch (error) {
+    return error;
+  }
+};

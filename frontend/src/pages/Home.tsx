@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { getPossibleFriends } from "../api/leaderboard";
 import AICircle from "../components/AICircle";
 import Footer from "../components/Footer";
 
@@ -7,6 +8,7 @@ export default function Home() {
   const firstLoad = useRef(true);
 
   useEffect(() => {
+    getPossibleFriends();
     if (firstLoad.current) {
       // firstLoad.current = false;
       return;
