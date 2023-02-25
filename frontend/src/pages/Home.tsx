@@ -13,7 +13,7 @@ export default function Home() {
           Welcome
         </h1>
         <h2 className="fadeLeft text-white font-bold uppercase text-3xl mt-2 md:text-5xl">
-          in ESPORT
+          to ESPORT
         </h2>
         <Link
           to="/leaderboard"
