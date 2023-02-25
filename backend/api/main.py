@@ -208,7 +208,7 @@ def games_post(id):
 
     user = User.objects(pk = id)[0]
 
-    user.selected_games.append(mongo.ObjectId(game))
+    user.selected_games.append(Game.objects(pk = game)[0])
 
     user.save()
 
@@ -228,7 +228,7 @@ def games_delete(id):
 
     user = User.objects(pk = id)[0]
 
-    user.selected_games.remove(mongo.ObjectId(game))
+    user.selected_games.remove(Game.objects(pk = game)[0])
 
     user.save()
 
