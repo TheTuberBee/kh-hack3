@@ -19,7 +19,7 @@ app.config["MONGODB_HOST"] = DB_URI
 db = MongoEngine(app)
 
 
-def authenticate(token: str):
+def authenticate():
     try:
         auth_token = request.headers.get("Authorization")
         if auth_token is None:
@@ -226,3 +226,48 @@ def games_delete(id):
 
     return "", HTTPStatus.CREATED
 
+
+def fix():
+    for game in Game.objects:
+        game.delete()
+
+    Game(
+        name = "Counter Strike: Global Offensive",
+        team_size = 5,
+        factor_names = ["Kills", "Deaths", "Assists"],
+        factor_values = [10, -2, 4],
+    ).save()
+
+    Game(
+        name = "League of Legends",
+        team_size = 5,
+        factor_names = ["Kills", "Deaths", "Assists"],
+        factor_values = [10, -2, 4],
+    ).save()
+
+    Game(
+        name = "Dummy",
+        team_size = 1,
+        factor_names = ["Contribution"],
+        factor_values = [1],
+    ).save()
+
+    for user in User.objects:
+        user.delete()
+
+    import secrets
+    User(
+        email = secrets.token_hex(10),
+        name = ""
+    ).save()
+
+    for match in Match.objects:
+        match.delete()
+
+    t = int(time.time())
+
+    Match.add_match(
+        timestamp = t,
+        team_a_players = []
+
+    )
