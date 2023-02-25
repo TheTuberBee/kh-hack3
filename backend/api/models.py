@@ -99,7 +99,11 @@ class User(mongo.Document):
             return None, None
         
     def set_password(self, plain: str):
-        self.password = bcrypt.hashpw(plain.encode("utf8"), bcrypt.gensalt()).decode("utf8")
+        try:
+            self.password = bcrypt.hashpw(plain.encode("utf8"), bcrypt.gensalt()).decode("utf8")
+        except:
+            # it seems like on some platforms hashpw returns not bytes but str
+            self.password = bcrypt.hashpw(plain.encode("utf8"), bcrypt.gensalt())
 
     def check_password(self, plain: str):
         try:
