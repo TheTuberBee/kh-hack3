@@ -306,7 +306,6 @@ def teammate_finder_get():
     for player in all_players_data:
         if player["id"] == user_id:
             player_data= player
-            print(player["name"])
 
             # split the list into two parts and remove the player
             before_player = all_players_data[:index]
