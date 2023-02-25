@@ -10,13 +10,13 @@ export default function Footer({ firstLoad }: FooterProps) {
     <div
       className={`${
         firstLoad && "fadeUp"
-      } absolute bottom-0 flex justify-center w-full mb-3`}
+      } absolute bottom-0 flex justify-center w-full mb-6`}
     >
-      <h3 className="text-white text-center text-lg">
+      <h3 className="text-white text-center text-xl">
         Don't have a team?{" "}
         <Link
           to="/teamfinder"
-          className="font-bold cursor-pointer hover:underline"
+          className="font-bold text-2xl cursor-pointer hover:underline"
         >
           Find one
         </Link>
