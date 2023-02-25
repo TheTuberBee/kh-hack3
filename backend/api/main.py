@@ -90,7 +90,7 @@ def user_post():
         return "Bad request.", HTTPStatus.BAD_REQUEST
 
     perms = authenticate()
-    print(staff)
+
     if staff is True and not perms.is_staff():
         return "Unauthorized.", HTTPStatus.UNAUTHORIZED
 
