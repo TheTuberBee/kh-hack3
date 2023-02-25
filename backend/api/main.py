@@ -1,11 +1,14 @@
 from flask import Flask, request, jsonify, Response, make_response
 from flask_mongoengine import MongoEngine
 import os
-from models import *
+from api.models import *
 from http import HTTPStatus
 import json
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 DB_USER = os.environ["DB_USER"]
 DB_PASSWORD = os.environ["DB_PASSWORD"]
@@ -65,6 +68,7 @@ def _login_reissue(token: str):
 
 
 @app.get("/login")
+@cross_origin()
 def login_get():
     email = request.args.get("email")
     password = request.args.get("password")
@@ -80,6 +84,7 @@ def login_get():
 
 
 @app.post("/user")
+@cross_origin()
 def user_post():
     email: str = request.args.get("email", type = str)
     password: str = request.args.get("password", type = str)
@@ -90,7 +95,7 @@ def user_post():
         return "Bad request.", HTTPStatus.BAD_REQUEST
 
     perms = authenticate()
-    print(staff)
+
     if staff is True and not perms.is_staff():
         return "Unauthorized.", HTTPStatus.UNAUTHORIZED
 
@@ -111,6 +116,7 @@ def user_post():
     return "", HTTPStatus.CREATED
 
 @app.get("/user/<string:id>")
+@cross_origin()
 def user_get(id):
     perms = authenticate()
 
@@ -123,7 +129,3 @@ def user_get(id):
         "name": user.name,
         "staff": user.staff,
     }
-
-
-if __name__ == '__main__':
-    app.run()

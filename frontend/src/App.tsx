@@ -17,6 +17,21 @@ import LeaderBoard from "./pages/LeaderBoard";
 import TeamFinder from "./pages/TeamFinder";
 import "./index.css";
 
+function getCookie(cname: string) {
+  let name = cname + "=";
+  let ca = document.cookie.split(";");
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) === " ") {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) === 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
 function App() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -24,9 +39,9 @@ function App() {
   const state: any = useSelector((state) => state);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = getCookie("token");
 
-    if (token) {
+    if (token !== "") {
       dispatch(setToken(token));
       dispatch(setLoggedIn(true));
     } else {
