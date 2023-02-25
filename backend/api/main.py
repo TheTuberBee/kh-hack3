@@ -71,7 +71,8 @@ def login_get():
     email = request.args.get("email")
     password = request.args.get("password")
     authToken = request.headers.get("Authorization")
-    old = authToken.split(" ")[1]
+    if authToken is not None:
+        old = authToken.split(" ")[1]
 
     if email is not None and password is not None:
         return _login_password(email, password)
@@ -94,6 +95,9 @@ def user_post():
         return "Bad request.", HTTPStatus.BAD_REQUEST
 
     authToken = request.headers.get("Authorization")
+    if authToken is None:
+        return "Unauthorized.", HTTPStatus.UNAUTHORIZED
+    
     token = authToken.split(" ")[1]
     perms = authenticate(token)
 
@@ -120,6 +124,9 @@ def user_post():
 @cross_origin()
 def user_get(id):
     authToken = request.headers.get("Authorization")
+    if authToken is None:
+        return "Unauthorized.", HTTPStatus.UNAUTHORIZED
+    
     token = authToken.split(" ")[1]
     perms = authenticate(token)
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getCurrentUser, login } from "../api/auth";
 import { useSelector, useDispatch } from "react-redux";
-import { setLoggedIn } from "../redux/actions/authAction";
+import { setCurrentUser, setLoggedIn } from "../redux/actions/authAction";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -35,8 +35,9 @@ export default function Login() {
       loginResponse.data.user_id
     ) {
       localStorage.setItem("uid", loginResponse.data.user_id);
-      const currentUser = await getCurrentUser(loginResponse.data.user_id);
-      console.log(currentUser);
+      localStorage.setItem("token", loginResponse.data.token);
+      const user = await getCurrentUser(loginResponse.data.user_id);
+      console.log(user);
       dispatch(setLoggedIn(true));
     } else {
       setError("Wrong email or password");
