@@ -21,3 +21,18 @@ export const getLeaderBoardData = async (
     return error;
   }
 };
+
+export const getAIResponse = async (gameId: number, userId: string) => {
+  try {
+    const response = await axios.get("/ai", {
+      params: {
+        game: gameId,
+        user: userId,
+      },
+    });
+
+    return response;
+  } catch (error) {
+    return error;
+  }
+};

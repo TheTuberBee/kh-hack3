@@ -15,7 +15,7 @@ import { Line, Doughnut, Bar } from "react-chartjs-2";
 import { useSelector } from "react-redux";
 import { Modal, Box } from "@mui/material";
 import { register } from "../api/auth";
-import { addGame, getAllGames, removeGame } from "../api/game";
+import { addGame, removeGame } from "../api/game";
 
 const style = {
   position: "absolute" as "absolute",
@@ -187,10 +187,12 @@ export default function Profile() {
     setPicture(defaultPictures);
     if (currentUser) {
       let arrayChange = defaultPictures;
-      currentUser.selected_games.map((game: number) => {
-        const gameProg = defaultPictures[game];
+      currentUser.selected_games.map((game: any) => {
+        const gameProg = defaultPictures.find(
+          (pic) => pic.db_id === game._id.$oid
+        );
         arrayChange = arrayChange.map((pic: any) => {
-          if (pic.url === gameProg.url) {
+          if (pic.url === gameProg?.url) {
             return {
               ...pic,
               selected: true,
@@ -229,6 +231,7 @@ export default function Profile() {
     });
 
     setPicture(newPicture);
+    window.location.reload();
   };
 
   const handleSaveStaff = async () => {

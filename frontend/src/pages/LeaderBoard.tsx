@@ -30,12 +30,12 @@ export default function LeaderBoard() {
   const [games, setGames] = useState<any[]>([]);
 
   const [allPlayers, setAllPlayers] = useState<any>([]);
-  const [modalData, setModalData] = useState<any>();
-
+  const [modalData, setModalData] = useState<string[]>();
+  const [tags, setTags] = useState<string[]>();
   const [isTournament, setIsTournament] = useState(false);
 
   const handleOpenModal = (index: number) => {
-    setModalData(allPlayers[index]);
+    setModalData(Object.values(allPlayers[index]));
     setIsOpen(true);
   };
 
@@ -62,6 +62,7 @@ export default function LeaderBoard() {
         isTournament
       );
 
+      setTags(response.data.game.factor_names);
       setAllPlayers(response.data.players);
     };
 
@@ -117,21 +118,14 @@ export default function LeaderBoard() {
           </h1>
           {modalData && (
             <>
-              <h2 className="">
-                Name: <span className="font-bold">{modalData.name}</span>
-              </h2>
-              <h2 className="">
-                Rating: <span className="font-bold">{modalData.rating}</span>
-              </h2>
-              <h2 className="">
-                Win count: <span className="font-bold">12313</span>
-              </h2>
-              <h2 className="">
-                Kill count: <span className="font-bold">123</span>
-              </h2>
-              <h2 className="">
-                Assist: <span className="font-bold">123</span>
-              </h2>
+              {modalData.map((data, index) => {
+                return (
+                  <h2 className="" key={index}>
+                    {tags && tags[index]}:
+                    <span className="font-bold">{data}</span>
+                  </h2>
+                );
+              })}
             </>
           )}
           <button
@@ -182,7 +176,7 @@ export default function LeaderBoard() {
         <h1 className="text-white text-center text-6xl font-bold mb-10">
           {isTournament ? "Tournament" : "Leaderboard"}
         </h1>
-        <div className="flex justify-center items-center w-1/4 border border-4 border-white rounded-lg p-3 mb-3">
+        <div className="flex justify-center items-center w-10/12 lg:mx-0 lg:w-1/4 border border-4 border-white rounded-lg p-3 mb-3">
           <p className="text-white font-bold text-lg w-full mr-4">
             Tournament mode
           </p>
@@ -254,7 +248,7 @@ export default function LeaderBoard() {
             )}
           </div>
         </div>
-        <div className="flex flex-col w-full mx-2 lg:w-3/4 lg:mx-0">
+        <div className="flex flex-col w-full mx-2 lg:w-3/4 lg:mx-0  mb-8">
           <div className="overflow-x-auto">
             <div className="p-1.5 w-full inline-block align-middle">
               <div className="overflow-hidden border rounded-lg">
