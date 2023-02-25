@@ -161,17 +161,26 @@ class Match(mongo.Document):
 
 
     @classmethod
-    def analyze(cls, player_filter, match_filter, game: Game):
+    def analyze(cls, player_filter, match_filter, game: Game, tournament: bool = False):
 
         scoreboard: dict[User, dict] = {}
         for user in User.objects:
             if player_filter(user):
-                scoreboard[user] = {
-                    "id": str(user.pk),
-                    "name": user.name,
-                    "rating": 400,
-                    "factors": []
-                }
+                if tournament:
+                    scoreboard[user] = {
+                        "id": str(user.pk),
+                        "name": user.name,
+                        "rating": 400,
+                        "factors": [],
+                        "top": [],
+                    }
+                else:
+                    scoreboard[user] = {
+                        "id": str(user.pk),
+                        "name": user.name,
+                        "rating": 400,
+                        "factors": [],
+                    }
                 for factor in game.factor_values:
                     scoreboard[user]["factors"].append(0)
 
@@ -208,16 +217,27 @@ class Match(mongo.Document):
                     if match.team_a_players[i] is not None:
                         player_data = scoreboard[match.team_a_players[i]]
                         player_data["rating"] += delta_a[i]
+                        if tournament:
+                            player_data["top"].append(delta_a[i])
                         for factor in range(len(game.factor_values)):
                             player_data["factors"][factor] += match.team_a_stats[i][factor]
 
                     if match.team_b_players[i] is not None:
                         player_data = scoreboard[match.team_b_players[i]]
                         player_data["rating"] += delta_b[i]
+                        if tournament: 
+                            player_data["top"].append(delta_b[i])
                         for factor in range(len(game.factor_values)):
                             player_data["factors"][factor] += match.team_b_stats[i][factor]
 
         players = [scoreboard[key] for key in scoreboard]
+
+        if tournament:
+            for player in players:
+                top = sorted(player["top"], reverse = True)
+                end = 10 if len(top) >= 10 else len(top) - 1
+                player["rating"] = sum(top[0:end])
+
         return {
             "game": {
                 "name": game.name,
