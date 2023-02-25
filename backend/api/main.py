@@ -46,7 +46,7 @@ def _login_password(email: str, password: str):
         key = "token",
         value = token,
         max_age = 400 * 24 * 3600,
-        httponly = True,
+        httponly = False,
         samesite = "Strict",
     )
     return res
@@ -61,7 +61,7 @@ def _login_reissue(token: str):
         key = "token",
         value = new,
         max_age = 400 * 24 * 3600,
-        httponly = True,
+        httponly = False,
         samesite = "Strict",
     )
     return res
