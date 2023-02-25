@@ -2,10 +2,11 @@ import axios from "../config/axios";
 
 export const login = async (email: string, password: string) => {
   try {
-    const response = await axios.get("/api/login", {
+    const response = await axios.get("/login", {
       params: { email, password },
     });
-    return response.data;
+
+    return response;
   } catch (error) {
     throw error;
   }
@@ -14,13 +15,21 @@ export const login = async (email: string, password: string) => {
 export const register = async (
   name: string,
   email: string,
-  password: string
+  password: string,
+  staff?: boolean
 ) => {
   try {
-    const response = await axios.post("/api/register", {
-      params: { name, email, password },
-    });
-    return response.data;
+    if (staff) {
+      const response = await axios.post("/user", null, {
+        params: { email, password, staff, name },
+      });
+      return response;
+    } else {
+      const response = await axios.post("/user", null, {
+        params: { email, password, name },
+      });
+      return response;
+    }
   } catch (error) {
     throw error;
   }
