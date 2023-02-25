@@ -201,7 +201,7 @@ export default function Profile() {
       });
       setPicture(arrayChange);
     }
-  }, []);
+  }, [currentUser]);
 
   const handleSelectImage = async (id: number) => {
     if (picture[id].selected) {

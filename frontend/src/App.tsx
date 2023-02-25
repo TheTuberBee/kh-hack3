@@ -24,10 +24,18 @@ function App() {
   const dispatch = useDispatch();
   const state: any = useSelector((state) => state);
 
+  const element = document.querySelector(".MuiPickerStaticWrapper-content");
+  const child = element?.firstChild;
+  const secondChild = child?.firstChild;
+  const newDiv = document.createElement("div");
+  secondChild?.replaceWith(newDiv);
+
   useEffect(() => {
     const uid = localStorage.getItem("uid");
+    const token = localStorage.getItem("token");
+
     const getCurrentUser2 = async () => {
-      const user: any = await getCurrentUser(uid as string);
+      const user: any = await getCurrentUser(uid as string, token as string);
       dispatch(setCurrentUser(user.data));
     };
 

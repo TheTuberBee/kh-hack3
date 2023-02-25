@@ -1,5 +1,11 @@
-import React, { useState } from "react";
-import { Modal, Box } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Modal, Box, TextField } from "@mui/material";
+import { LocalizationProvider } from "@mui/x-date-pickers-pro";
+import { AdapterDayjs } from "@mui/x-date-pickers-pro/AdapterDayjs";
+import { StaticDateRangePicker } from "@mui/x-date-pickers-pro/StaticDateRangePicker";
+import { DateRange } from "@mui/x-date-pickers-pro/DateRangePicker";
+import { Dayjs } from "dayjs";
+import { getLeaderBoardData } from "../api/leaderboard";
 
 const style = {
   position: "absolute" as "absolute",
@@ -17,10 +23,41 @@ const style = {
 
 export default function LeaderBoard() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpen2, setIsOpen2] = useState(false);
+  const [value, setValue] = useState<DateRange<Dayjs>>([null, null]);
+  const [gameName, setGameName] = useState<string>("League of Legends");
 
   const handleOpenModal = () => {
     setIsOpen(true);
   };
+
+  useEffect(() => {
+    const getLeaderBoard = async (
+      gameName: string,
+      convertedToUnixBegin: number,
+      convertedToUnixEnd: number
+    ) => {
+      const response = await getLeaderBoardData(
+        gameName,
+        convertedToUnixBegin,
+        convertedToUnixEnd
+      );
+
+      console.log(response);
+    };
+
+    if (value[0] && value[1]) {
+      const convertedToUnixBegin = Math.floor(
+        new Date(value[0]?.format("DD/MM/YYYY")).getTime() / 1000
+      );
+      const convertedToUnixEnd = Math.floor(
+        new Date(value[1]?.format("DD/MM/YYYY")).getTime() / 1000
+      );
+      if (convertedToUnixBegin && convertedToUnixEnd) {
+        getLeaderBoard(gameName, convertedToUnixBegin, convertedToUnixEnd);
+      }
+    }
+  }, [gameName, value]);
 
   return (
     <>
@@ -60,6 +97,31 @@ export default function LeaderBoard() {
           </button>
         </Box>
       </Modal>
+      <Modal
+        open={isOpen2}
+        onClose={() => setIsOpen2(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <StaticDateRangePicker
+              displayStaticWrapperAs="desktop"
+              value={value}
+              onChange={(newValue) => {
+                setValue(newValue);
+              }}
+              renderInput={(startProps, endProps) => (
+                <React.Fragment>
+                  <TextField {...startProps} />
+                  <Box sx={{ mx: 2 }}> to </Box>
+                  <TextField {...endProps} />
+                </React.Fragment>
+              )}
+            />
+          </LocalizationProvider>
+        </Box>
+      </Modal>
       <div className="absolute top-0 flex justify-left w-full mt-16 lg:mt-24 lg:pl-16">
         <div
           className="flex items-center"
@@ -75,12 +137,17 @@ export default function LeaderBoard() {
         <h1 className="text-white text-center text-6xl font-bold mb-10">
           LeaderBoard
         </h1>
+
         <div className="flex flex-row items-center w-7/12 my-4">
           <h1 className="text-white text-center text-2xl font-bold mr-5">
             Game:
           </h1>
           <div className="flex justify-between w-full">
-            <select className="w-full bg-transparent border-b-2 border-white text-white text-2xl font-bold mr-4">
+            <select
+              className="w-full bg-transparent border-b-2 border-white text-white text-2xl font-bold mr-4"
+              defaultValue={gameName}
+              onChange={(e) => setGameName(e.target.value)}
+            >
               <option value="lol">League of Legends</option>
               <option value="csgo">CS GO</option>
               <option value="valorant">Valorant</option>
@@ -88,11 +155,34 @@ export default function LeaderBoard() {
               <option value="teamfighttactics">Teamfight Tactics</option>
             </select>
 
-            <select className="w-1/2 bg-transparent border-b-2 border-white text-white text-2xl font-bold">
-              <option value="lol">This week</option>
-              <option value="csgo">This month</option>
-              <option value="valorant">This year</option>
-            </select>
+            <input
+              type="text"
+              className="w-1/2 bg-transparent border-b-2 border-white text-white text-lg font-bold placeholder:text-white focus:outline-none"
+              placeholder="Pick a date..."
+              value={
+                value[0] && value[1]
+                  ? value[0]?.format("DD/MM/YYYY") +
+                    " - " +
+                    value[1]?.format("DD/MM/YYYY")
+                  : ""
+              }
+              onClick={() => {
+                setIsOpen2(true);
+
+                const interval = setInterval(() => {
+                  const element = document.querySelector(
+                    ".MuiPickerStaticWrapper-content"
+                  );
+                  const child = element?.firstChild;
+                  const secondChild = child?.firstChild;
+                  const newDiv = document.createElement("div");
+                  if (secondChild) {
+                    secondChild?.replaceWith(newDiv);
+                    clearInterval(interval);
+                  }
+                }, 5);
+              }}
+            />
           </div>
         </div>
         <div className="flex flex-col w-full mx-2 lg:w-3/4 lg:mx-0">
