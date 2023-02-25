@@ -37,9 +37,7 @@ export const register = async (
 
 export const getCurrentUser = async (uid: string) => {
   try {
-    const response = await axios.get("/user/" + uid, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
+    const response = await axios.get("/user/" + uid);
 
     return response;
   } catch (error) {
