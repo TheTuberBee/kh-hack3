@@ -60,6 +60,15 @@ export default function LeaderBoard() {
           </button>
         </Box>
       </Modal>
+      <div className="absolute top-0 flex justify-left w-full mt-24 ml-16">
+        <div
+          className="flex items-center"
+          onClick={() => window.history.back()}
+        >
+          <i className="fas fa-arrow-left text-white text-2xl cursor-pointer mr-2"></i>
+          <h1 className="text-white font-bold cursor-pointer">Back</h1>
+        </div>
+      </div>
       <div className="flex justify-center items-center flex-col">
         <h1 className="text-white text-center text-6xl font-bold mb-10">
           LeaderBoard

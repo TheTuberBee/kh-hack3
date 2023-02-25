@@ -7,7 +7,7 @@ export default function Home() {
     <>
       <div className="flex justify-center items-center flex-col">
         <h1
-          className="fadeDown text-white font-bold uppercase text-5xl mt-36 md:text-7xl"
+          className="fadeDown text-white font-bold uppercase text-5xl mt-36 md:text-8xl"
           id="mainTitle"
         >
           Welcome
