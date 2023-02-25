@@ -284,7 +284,7 @@ def test_leaderboard():
     print(scoreboard)
 
 class SinglePool(mongo.Document):
-    user_id = mongo.IntField()
+    user_id = mongo.StringField()
     position = mongo.StringField()
     rank = mongo.StringField()
     elo = mongo.IntField()
