@@ -17,6 +17,7 @@ import TeamFinder from "./pages/TeamFinder";
 import { setCurrentUser, setLoggedIn } from "./redux/actions/authAction";
 import "./index.css";
 import { getCurrentUser } from "./api/auth";
+import AIPage from "./pages/AIPage";
 
 function App() {
   const navigate = useNavigate();
@@ -24,10 +25,18 @@ function App() {
   const dispatch = useDispatch();
   const state: any = useSelector((state) => state);
 
+  const element = document.querySelector(".MuiPickerStaticWrapper-content");
+  const child = element?.firstChild;
+  const secondChild = child?.firstChild;
+  const newDiv = document.createElement("div");
+  secondChild?.replaceWith(newDiv);
+
   useEffect(() => {
     const uid = localStorage.getItem("uid");
+    const token = localStorage.getItem("token");
+
     const getCurrentUser2 = async () => {
-      const user: any = await getCurrentUser(uid as string);
+      const user: any = await getCurrentUser(uid as string, token as string);
       dispatch(setCurrentUser(user.data));
     };
 
@@ -62,6 +71,7 @@ function App() {
         {state.loggedIn && (
           <Route path="/teamfinder" element={<TeamFinder />} />
         )}
+        {state.loggedIn && <Route path="/aipage" element={<AIPage />} />}
         {state.loggedIn && <Route path="/" element={<Home />} />}
         <Route
           path="*"

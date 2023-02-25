@@ -149,22 +149,27 @@ const defaultPictures = [
   {
     url: "https://notagamer.net/wp-content/uploads/2023/01/Saint-League-of-Legends.jpeg",
     selected: false,
+    db_id: "63fa20423cab53f5ff515119",
   },
   {
     url: "https://lh6.googleusercontent.com/w_yrlUf7_hpOs7PgODznjjBmPXRes_QEHCE4cendhw3dIdA9erWxx82516xhI02JOwmJNKwyRMo3Ls4JC9XzLU2z9dlVZd_aP0QvcQ_4oX1PA2grXCI0Czjvgbsjy_qCgOr6Oqp_",
     selected: false,
+    db_id: "63fa565c342917724fd4fc2f",
   },
   {
     url: "https://www.siasat.com/wp-content/uploads/2022/10/Valorant.jpg",
     selected: false,
+    db_id: "63fa565c342917724fd4fc30",
   },
   {
     url: "https://i.pcmag.com/imagery/reviews/03S9ZRW0TQcpCQLxKx4lUVT-35..v1598017825.png",
     selected: false,
+    db_id: "63fa565c342917724fd4fc31",
   },
   {
     url: "https://lh6.googleusercontent.com/EjWbZJHCPZSv5RizEXOn-raZqV0DnY2igSYGXX5w82H-KroN6ogVwbWzFHgCr0v8tq_ukNUI3kk3yeARRk3I1LIFY4Am9pMcD89mVM76v9-cbKD1OcPiKcb8GU2ivsN1mQ1p-Yxj",
     selected: false,
+    db_id: "63fa565c342917724fd4fc32",
   },
 ];
 
@@ -182,10 +187,12 @@ export default function Profile() {
     setPicture(defaultPictures);
     if (currentUser) {
       let arrayChange = defaultPictures;
-      currentUser.selected_games.map((game: number) => {
-        const gameProg = defaultPictures[game];
+      currentUser.selected_games.map((game: any) => {
+        const gameProg = defaultPictures.find(
+          (pic) => pic.db_id === game._id.$oid
+        );
         arrayChange = arrayChange.map((pic: any) => {
-          if (pic.url === gameProg.url) {
+          if (pic.url === gameProg?.url) {
             return {
               ...pic,
               selected: true,
@@ -205,9 +212,9 @@ export default function Profile() {
 
   const handleSelectImage = async (id: number) => {
     if (picture[id].selected) {
-      await removeGame(id);
+      await removeGame(picture[id].db_id);
     } else {
-      await addGame(id);
+      await addGame(picture[id].db_id);
     }
 
     const newPicture = picture.map((pic, index) => {
@@ -224,6 +231,7 @@ export default function Profile() {
     });
 
     setPicture(newPicture);
+    window.location.reload();
   };
 
   const handleSaveStaff = async () => {
@@ -423,7 +431,10 @@ export default function Profile() {
                     <div className="container mx-auto px-5 py-2 lg:px-32 lg:pt-12">
                       <div className="-m-1 flex flex-wrap md:-m-2">
                         {picture.map((pic, index) => (
-                          <div className="flex w-full lg:w-1/3 flex-wrap cursor pointer">
+                          <div
+                            key={index}
+                            className="flex w-full lg:w-1/3 flex-wrap cursor pointer"
+                          >
                             <div
                               className="w-full p-1 cursor pointer md:p-2"
                               onClick={() => handleSelectImage(index)}

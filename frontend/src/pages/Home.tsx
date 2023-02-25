@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
+import AICircle from "../components/AICircle";
 import Footer from "../components/Footer";
 
 export default function Home() {
@@ -40,6 +41,7 @@ export default function Home() {
         </Link>
       </div>
       <Footer firstLoad={firstLoad.current} />
+      <AICircle />
     </>
   );
 }
