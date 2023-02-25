@@ -36,7 +36,10 @@ export default function Login() {
     ) {
       localStorage.setItem("uid", loginResponse.data.user_id);
       localStorage.setItem("token", loginResponse.data.token);
-      const user: any = await getCurrentUser(loginResponse.data.user_id);
+      const user: any = await getCurrentUser(
+        loginResponse.data.user_id,
+        loginResponse.data.token
+      );
       dispatch(setCurrentUser(user.data));
       dispatch(setLoggedIn(true));
     } else {
