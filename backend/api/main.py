@@ -175,7 +175,7 @@ def leaderboard_get():
 
     player_filter = lambda player: True
 
-    data = Match.analyze(player_filter, match_filter, game)
+    data = Match.analyze(player_filter, match_filter, game, tournament = tournament)
     return data
 
 
@@ -208,7 +208,7 @@ def games_post(id):
 
     user = User.objects(pk = id)[0]
 
-    user.selected_games.append(game)
+    user.selected_games.append(mongo.ObjectId(game))
 
     user.save()
 
@@ -228,7 +228,7 @@ def games_delete(id):
 
     user = User.objects(pk = id)[0]
 
-    user.selected_games.remove(game)
+    user.selected_games.remove(mongo.ObjectId(game))
 
     user.save()
 
