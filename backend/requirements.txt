@@ -2,3 +2,4 @@ Flask
 flask-mongoengine
 py-bcrypt
 pyjwt
+flask_cors

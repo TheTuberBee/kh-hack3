@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "../api/auth";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setLoggedIn } from "../redux/actions/authAction";
 
 export default function Login() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
@@ -16,19 +18,26 @@ export default function Login() {
     }
   }, [loggedIn, navigate]);
 
-  const handleLogin = async () => {
+  const handleLogin = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+
     if (email.trim() === "" || password.trim() === "") {
       setError("Please enter all fields");
     } else {
       setError("");
     }
 
-    const loginResponse = await login(email, password);
+    const loginResponse: any = await login(email, password);
 
-    if (loginResponse.status === 200) {
-      console.log(loginResponse.data);
+    if (
+      loginResponse.status < 400 &&
+      loginResponse.data &&
+      loginResponse.data.user_id
+    ) {
+      localStorage.setItem("uid", loginResponse.data.user_id);
+      dispatch(setLoggedIn(true));
     } else {
-      setError(loginResponse.data);
+      setError("Wrong email or password");
     }
   };
 
@@ -73,7 +82,7 @@ export default function Login() {
               Login
             </button>
           </div>
-          {error.trim().length > 0 && (
+          {error && error.trim().length > 0 && (
             <div className="text-red-500">{error}</div>
           )}
         </form>

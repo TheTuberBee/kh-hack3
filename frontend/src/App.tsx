@@ -11,10 +11,10 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import { setLoggedIn, setToken } from "./redux/actions/authAction";
 import Profile from "./pages/Profile";
 import LeaderBoard from "./pages/LeaderBoard";
 import TeamFinder from "./pages/TeamFinder";
+import { setLoggedIn } from "./redux/actions/authAction";
 import "./index.css";
 
 function App() {
@@ -24,17 +24,17 @@ function App() {
   const state: any = useSelector((state) => state);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (token) {
-      dispatch(setToken(token));
+    const uid = localStorage.getItem("uid");
+    if (uid) {
       dispatch(setLoggedIn(true));
-    } else {
-      if (location.pathname !== "/login" && location.pathname !== "/register") {
-        navigate("/login");
-      }
+    } else if (
+      location.pathname !== "/login" &&
+      location.pathname !== "/register"
+    ) {
+      dispatch(setLoggedIn(false));
+      navigate("/login");
     }
-  }, [dispatch, location.pathname, navigate]);
+  }, [dispatch, location.pathname, navigate, state.loggedIn]);
 
   return (
     <>
@@ -50,7 +50,10 @@ function App() {
           <Route path="/teamfinder" element={<TeamFinder />} />
         )}
         {state.loggedIn && <Route path="/" element={<Home />} />}
-        <Route path="*" element={<Navigate to="/" />} />
+        <Route
+          path="*"
+          element={<Navigate to={state.loggedIn ? "/" : "/login"} />}
+        />
       </Routes>
     </>
   );

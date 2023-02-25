@@ -17,19 +17,21 @@ export default function Register() {
     }
   }, [loggedIn, navigate]);
 
-  const handleRegister = async () => {
+  const handleRegister = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+
     if (name.trim() === "" || email.trim() === "" || password.trim() === "") {
       setError("Please enter all fields");
     } else {
       setError("");
     }
 
-    const registerResponse = await register(name, email, password);
+    const registerResponse: any = await register(name, email, password);
 
-    if (registerResponse.status === 200) {
-      console.log(registerResponse.data);
+    if (registerResponse.status < 400) {
+      navigate("/login");
     } else {
-      setError(registerResponse.data);
+      setError("Invalid data");
     }
   };
 
@@ -88,7 +90,7 @@ export default function Register() {
               Register
             </button>
           </div>
-          {error.trim().length > 0 && (
+          {error && error.trim().length > 0 && (
             <div className="text-red-500">{error}</div>
           )}
         </form>
