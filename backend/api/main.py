@@ -148,12 +148,16 @@ def leaderboard_get():
     end_time: int = request.args.get("end_time", type = int)
     game_id: str = request.args.get("game", type = str)
     restricted: bool = request.args.get("restricted", type = json.loads)
+    tournament: bool = request.args.get("tournament", type = json.loads)
 
     if start_time is None or end_time is None or game_id is None:
         return "Bad Request.", HTTPStatus.BAD_REQUEST
     
     if restricted is None:
         restricted = False
+
+    if tournament is None:
+        tournament = False
     
     game = Game.objects(pk = game_id)[0]
 
@@ -196,9 +200,11 @@ def games_get():
 def games_post(id):
     game: str = request.args.get("game", type = str)
 
+    """
     perms = authenticate()
     if not perms.is_staff() and id != perms.user_id:
         return "Unauthorized.", HTTPStatus.UNAUTHORIZED
+    """
 
     user = User.objects(pk = id)[0]
 
@@ -214,9 +220,11 @@ def games_post(id):
 def games_delete(id):
     game: str = request.args.get("game", type = str)
 
+    """
     perms = authenticate()
     if not perms.is_staff() and id != perms.user_id:
         return "Unauthorized.", HTTPStatus.UNAUTHORIZED
+    """
 
     user = User.objects(pk = id)[0]
 
@@ -225,49 +233,3 @@ def games_delete(id):
     user.save()
 
     return "", HTTPStatus.CREATED
-
-
-def fix():
-    for game in Game.objects:
-        game.delete()
-
-    Game(
-        name = "Counter Strike: Global Offensive",
-        team_size = 5,
-        factor_names = ["Kills", "Deaths", "Assists"],
-        factor_values = [10, -2, 4],
-    ).save()
-
-    Game(
-        name = "League of Legends",
-        team_size = 5,
-        factor_names = ["Kills", "Deaths", "Assists"],
-        factor_values = [10, -2, 4],
-    ).save()
-
-    Game(
-        name = "Dummy",
-        team_size = 1,
-        factor_names = ["Contribution"],
-        factor_values = [1],
-    ).save()
-
-    for user in User.objects:
-        user.delete()
-
-    import secrets
-    User(
-        email = secrets.token_hex(10),
-        name = ""
-    ).save()
-
-    for match in Match.objects:
-        match.delete()
-
-    t = int(time.time())
-
-    Match.add_match(
-        timestamp = t,
-        team_a_players = []
-
-    )
