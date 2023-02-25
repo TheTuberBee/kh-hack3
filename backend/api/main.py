@@ -153,6 +153,20 @@ def games_post():
      
      return "", HTTPStatus.CREATED
 
+@app.delete("/games")
+@cross_origin()
+def games_post():
+     uid : str = request.args.get("uid", type = str)
+     game : str = request.args.get("game", type = str)
+
+     user = User.objects(pk = uid)[0]
+   
+     user.selected_games.remove(game)
+
+     user.save()
+     
+     return "", HTTPStatus.CREATED
+
      
      
 

@@ -15,7 +15,7 @@ import { Line, Doughnut, Bar } from "react-chartjs-2";
 import { useSelector } from "react-redux";
 import { Modal, Box } from "@mui/material";
 import { register } from "../api/auth";
-import { addGame } from "../api/game";
+import { addGame, removeGame } from "../api/game";
 
 const style = {
   position: "absolute" as "absolute",
@@ -145,6 +145,29 @@ export const dataBar = {
   ],
 };
 
+const defaultPictures = [
+  {
+    url: "https://notagamer.net/wp-content/uploads/2023/01/Saint-League-of-Legends.jpeg",
+    selected: false,
+  },
+  {
+    url: "https://lh6.googleusercontent.com/w_yrlUf7_hpOs7PgODznjjBmPXRes_QEHCE4cendhw3dIdA9erWxx82516xhI02JOwmJNKwyRMo3Ls4JC9XzLU2z9dlVZd_aP0QvcQ_4oX1PA2grXCI0Czjvgbsjy_qCgOr6Oqp_",
+    selected: false,
+  },
+  {
+    url: "https://www.siasat.com/wp-content/uploads/2022/10/Valorant.jpg",
+    selected: false,
+  },
+  {
+    url: "https://i.pcmag.com/imagery/reviews/03S9ZRW0TQcpCQLxKx4lUVT-35..v1598017825.png",
+    selected: false,
+  },
+  {
+    url: "https://lh6.googleusercontent.com/EjWbZJHCPZSv5RizEXOn-raZqV0DnY2igSYGXX5w82H-KroN6ogVwbWzFHgCr0v8tq_ukNUI3kk3yeARRk3I1LIFY4Am9pMcD89mVM76v9-cbKD1OcPiKcb8GU2ivsN1mQ1p-Yxj",
+    selected: false,
+  },
+];
+
 export default function Profile() {
   const currentUser = useSelector((state: any) => state.currentUser);
   const [isOpen, setIsOpen] = useState(false);
@@ -153,44 +176,39 @@ export default function Profile() {
   const [staffEmail, setStaffEmail] = useState("");
   const [staffPassword, setStaffPassword] = useState("");
 
-  const [picture, setPicture] = useState([
-    {
-      url: "https://notagamer.net/wp-content/uploads/2023/01/Saint-League-of-Legends.jpeg",
-      selected: false,
-    },
-    {
-      url: "https://lh6.googleusercontent.com/w_yrlUf7_hpOs7PgODznjjBmPXRes_QEHCE4cendhw3dIdA9erWxx82516xhI02JOwmJNKwyRMo3Ls4JC9XzLU2z9dlVZd_aP0QvcQ_4oX1PA2grXCI0Czjvgbsjy_qCgOr6Oqp_",
-      selected: false,
-    },
-    {
-      url: "https://www.siasat.com/wp-content/uploads/2022/10/Valorant.jpg",
-      selected: true,
-    },
-    {
-      url: "https://i.pcmag.com/imagery/reviews/03S9ZRW0TQcpCQLxKx4lUVT-35..v1598017825.png",
-      selected: false,
-    },
-    {
-      url: "https://lh6.googleusercontent.com/EjWbZJHCPZSv5RizEXOn-raZqV0DnY2igSYGXX5w82H-KroN6ogVwbWzFHgCr0v8tq_ukNUI3kk3yeARRk3I1LIFY4Am9pMcD89mVM76v9-cbKD1OcPiKcb8GU2ivsN1mQ1p-Yxj",
-      selected: false,
-    },
-  ]);
+  const [picture, setPicture] = useState(defaultPictures);
 
   useEffect(() => {
+    setPicture(defaultPictures);
     if (currentUser) {
+      let arrayChange = defaultPictures;
       currentUser.selected_games.map((game: number) => {
-        const gameProg = picture[game];
-        setPicture((prev: any) => [
-          ...prev,
-          { url: gameProg.url, selected: true },
-        ]);
+        const gameProg = defaultPictures[game];
+        arrayChange = arrayChange.map((pic: any) => {
+          if (pic.url === gameProg.url) {
+            return {
+              ...pic,
+              selected: true,
+            };
+          } else {
+            return {
+              ...pic,
+            };
+          }
+        });
+
         return null;
       });
+      setPicture(arrayChange);
     }
-  }, [currentUser, picture]);
+  }, []);
 
   const handleSelectImage = async (id: number) => {
-    await addGame(id);
+    if (picture[id].selected) {
+      await removeGame(id);
+    } else {
+      await addGame(id);
+    }
 
     const newPicture = picture.map((pic, index) => {
       if (index === id) {
@@ -204,6 +222,7 @@ export default function Profile() {
         };
       }
     });
+
     setPicture(newPicture);
   };
 
