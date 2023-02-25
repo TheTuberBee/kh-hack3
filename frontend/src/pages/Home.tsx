@@ -7,7 +7,7 @@ export default function Home() {
 
   useEffect(() => {
     if (firstLoad.current) {
-      firstLoad.current = false;
+      // firstLoad.current = false;
       return;
     }
   }, []);
@@ -34,7 +34,7 @@ export default function Home() {
           to="/leaderboard"
           className={`${
             firstLoad.current && "fadeRight"
-          } p-2 px-4 text-white font-bold rounded-lg mt-5 uppercase bg-blue-800 hover:p-3 hover:px-5 hover:bg-blue-900`}
+          } p-4 px-6 text-white font-bold rounded-lg mt-5 uppercase bg-blue-800 hover:p-5 hover:px-7 hover:bg-blue-900`}
         >
           Check out the board
         </Link>

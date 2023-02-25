@@ -75,6 +75,18 @@ export default function LeaderBoard() {
         <h1 className="text-white text-center text-6xl font-bold mb-10">
           LeaderBoard
         </h1>
+        <div className="flex flex-row items-center w-1/2 my-4">
+          <h1 className="text-white text-center text-2xl font-bold mr-5">
+            Game:
+          </h1>
+          <select className="w-full bg-transparent border-b-2 border-white text-white text-2xl font-bold">
+            <option value="lol">League of Legends</option>
+            <option value="csgo">CS GO</option>
+            <option value="valorant">Valorant</option>
+            <option value="pubg">PlayerUnknown's Battlegrounds</option>
+            <option value="teamfighttactics">Teamfight Tactics</option>
+          </select>
+        </div>
         <div className="flex flex-col w-full mx-2 lg:w-3/4 lg:mx-0">
           <div className="overflow-x-auto">
             <div className="p-1.5 w-full inline-block align-middle">
