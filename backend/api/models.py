@@ -205,8 +205,6 @@ class Match(mongo.Document):
                 )
 
                 for i in range(match.game.team_size):
-                    #print(match.team_a_players[i].name, scoreboard[match.team_a_players[i]])
-                    #print(match.team_b_players[i].name, scoreboard[match.team_b_players[i]])
                     if match.team_a_players[i] is not None:
                         player_data = scoreboard[match.team_a_players[i]]
                         player_data["rating"] += delta_a[i]
