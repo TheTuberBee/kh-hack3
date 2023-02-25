@@ -6,10 +6,39 @@ html {
   scroll-behavior: smooth;
 }
 
-body {
-  box-sizing: border-box;
+#myVideo {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  min-width: 100%;
+  min-height: 100%;
+  z-index: -100;
+  object-fit: cover;
+}
+
+@media (min-aspect-ratio: 16/9) {
+  #myVideo {
+    width: 100%;
+    height: auto;
+  }
+}
+
+@media (max-aspect-ratio: 16/9) {
+  #myVideo {
+    width: auto;
+    height: 100%;
+  }
+}
+
+#backgroundLayer {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  min-width: 100%;
+  min-height: 100%;
+  z-index: -100;
   background: linear-gradient(to left, #0891b2, #1e40af);
-  overflow-x: hidden;
+  opacity: 0.8;
 }
 
 select option {
