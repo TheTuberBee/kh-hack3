@@ -21,6 +21,11 @@ db = MongoEngine(app)
 
 def authenticate(token: str):
     try:
+        auth_token = request.headers.get("Authorization")
+        if auth_token is None:
+            return User.Permissions()
+    
+        token = auth_token.split(" ")[1]
         return User.authenticate_token(token)
     except KeyError:
         # fall back to default permissions
@@ -70,9 +75,10 @@ def _login_reissue(token: str):
 def login_get():
     email = request.args.get("email")
     password = request.args.get("password")
-    authToken = request.headers.get("Authorization")
-    if authToken is not None:
-        old = authToken.split(" ")[1]
+    try:
+        old = request.headers.get("Authorization").split(" ")[1]
+    except:
+        old = None
 
     if email is not None and password is not None:
         return _login_password(email, password)
@@ -94,12 +100,9 @@ def user_post():
     if email is None or password is None or name is None:
         return "Bad request.", HTTPStatus.BAD_REQUEST
 
-    authToken = request.headers.get("Authorization")
-    if authToken is not None:
-         token = authToken.split(" ")[1]
-         perms = authenticate(token)
-         if staff is True and not perms.is_staff():
-          return "Unauthorized.", HTTPStatus.UNAUTHORIZED
+    perms = authenticate()
+    if staff is True and not perms.is_staff():
+        return "Unauthorized.", HTTPStatus.UNAUTHORIZED
 
     email = email.lower()
     if User.objects(email = email).count() > 0:
@@ -117,15 +120,12 @@ def user_post():
     user.save()
     return "", HTTPStatus.CREATED
 
+
 @app.get("/user/<string:id>")
 @cross_origin()
 def user_get(id):
-    authToken = request.headers.get("Authorization")
-    if authToken is None:
-        return "Unauthorized.", HTTPStatus.UNAUTHORIZED
-    
-    token = authToken.split(" ")[1]
-    perms = authenticate(token)
+
+    perms = authenticate()
 
     if not perms.is_staff() and id != perms.user_id:
         return "Unauthorized.", HTTPStatus.UNAUTHORIZED
@@ -136,3 +136,57 @@ def user_get(id):
         "name": user.name,
         "staff": user.staff,
     }
+
+
+@app.get("/leaderboard")
+@cross_origin()
+def leaderboard_get():
+
+    timespan: str = request.args.get("timespan", type = str)
+    game_id: str = request.args.get("game", type = str)
+    restricted: bool = request.args.get("restricted", type = json.loads)
+
+    if timespan is None or game_id is None:
+        return "Bad Request.", HTTPStatus.BAD_REQUEST
+    
+    if restricted is None:
+        restricted = False
+    
+    game = Game.objects(pk = game_id)[0]
+
+    if timespan == "year":
+        match_filter = lambda match: (time.time() - match.timestamp < 365 * 24 * 3600)
+    if timespan == "month":
+        match_filter = lambda match: (time.time() - match.timestamp < 30 * 24 * 3600)
+    if timespan == "week":
+        match_filter = lambda match: (time.time() - match.timestamp < 7 * 24 * 3600)
+
+    if restricted:
+        _func = match_filter
+        def _new(match: Match):
+            if not _func(match): return False
+            for player in match.team_a_players + match.team_b_players:
+                if player is None:
+                    return False
+            return True
+        match_filter = _new
+
+    player_filter = lambda player: True
+
+    data = Match.analyze(player_filter, match_filter, game)
+    return data
+
+
+@app.get("/games")
+@cross_origin()
+def games_get():
+    games = []
+    for game in Game.objects:
+        game: Game
+        games.append({
+            "name": game.name,
+            "factor_names": game.factor_names,
+            "factor_values": game.factor_values,
+            "team_size": game.team_size,
+        })
+    return jsonify(games)
