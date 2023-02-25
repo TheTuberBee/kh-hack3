@@ -5,6 +5,7 @@ from api.models import *
 from http import HTTPStatus
 import json
 from flask_cors import CORS, cross_origin
+from api.matchmaking import *
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -233,3 +234,151 @@ def games_delete(id):
     user.save()
 
     return "", HTTPStatus.CREATED
+
+def fix():
+    for game in Game.objects:
+        game.delete()
+
+    Game(
+        name = "Counter Strike: Global Offensive",
+        team_size = 5,
+        factor_names = ["Kills", "Deaths", "Assists"],
+        factor_values = [10, -2, 4],
+    ).save()
+
+    Game(
+        name = "League of Legends",
+        team_size = 5,
+        factor_names = ["Kills", "Deaths", "Assists"],
+        factor_values = [10, -2, 4],
+    ).save()
+
+    Game(
+        name = "Dummy",
+        team_size = 1,
+        factor_names = ["Contribution"],
+        factor_values = [1],
+    ).save()
+
+    for user in User.objects:
+        user.delete()
+
+    import secrets
+    User(
+        email = secrets.token_hex(10),
+        name = ""
+    ).save()
+
+    for match in Match.objects:
+        match.delete()
+
+    t = int(time.time())
+
+    Match.add_match(
+        timestamp = t,
+        team_a_players = []
+
+    )
+
+# teammate finder
+@app.get("/teammate_finder")
+@cross_origin()
+def teammate_finder_get():
+    # authenticate
+    perms = authenticate()
+
+    if perms.user_id is None:
+        return "Unauthorized.", HTTPStatus.UNAUTHORIZED
+    
+    user_id = perms.user_id
+
+    player_filter = lambda player: True
+    match_filter = lambda match: True
+    game = Game.objects(pk = "63fa20423cab53f5ff515119")[0]
+
+    all_players_data = Match.analyze(player_filter, match_filter, game)["players"]
+
+    print(all_players_data)
+
+    player_data = None
+
+    index = 0
+
+    # find the player in the all_players_data
+    for player in all_players_data:
+        if player["id"] == user_id:
+            player_data= player
+            print(player["name"])
+
+            # split the list into two parts and remove the player
+            before_player = all_players_data[:index]
+            after_player = all_players_data[index + 1:]
+
+            break
+        index += 1
+
+    print(before_player)
+    print(after_player)
+
+    # create the data for the frontend list
+    # data needed: name, elo, email, killcount, deathcount, assistcount
+
+    # create the list of players
+    players = []
+
+    index = 0
+    # add the players before the player
+    for player in before_player:
+        if index >= 5:
+            break
+
+        # get user's email from the database using the player's id
+        user = User.objects(pk = player["id"])[0]
+
+
+        players.append({
+            "name": player["name"],
+            "elo": player["rating"],
+            "email": user.email,
+            "killcount": player["factors"][8],
+            "deathcount": player["factors"][2],
+            "assistcount": player["factors"][0]
+        })
+        index += 1
+
+    # get player's email from the database
+    user = User.objects(pk = user_id)[0]
+
+    # add the player
+    players.append({
+        "name": "You",
+        "elo": player_data["rating"],
+        "email": user.email,
+        "killcount": player_data["factors"][8],
+        "deathcount": player_data["factors"][2],
+        "assistcount": player_data["factors"][0]
+    })
+
+    index = 0
+
+    # add the players after the player 
+    for player in after_player:  
+        if index >= 5:
+            break
+
+        # get user's email from the database using the player's id
+        user = User.objects(pk = player["id"])[0]
+
+        players.append({
+            "name": player["name"],
+            "elo": player["rating"],
+            "email": user.email,
+            "killcount": player["factors"][8],
+            "deathcount": player["factors"][2],
+            "assistcount": player["factors"][0]
+        })  
+
+        index += 1
+
+
+    return jsonify(players)

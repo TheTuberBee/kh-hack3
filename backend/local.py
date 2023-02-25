@@ -1,3 +1,3 @@
 if __name__ == "__main__":
     import api.main
-    api.main.app.run()
+    api.main.app.run(debug=True)
