@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Modal, Box } from "@mui/material";
 import { getPossibleFriends } from "../api/leaderboard";
-import { eventNames } from "process";
 
 const style = {
   position: "absolute" as "absolute",
@@ -15,6 +14,13 @@ const style = {
   pt: 2,
   px: 4,
   pb: 3,
+};
+
+const convertShortText = (text: string) => {
+  if (text.length > 20) {
+    return text.substring(0, 10) + "...";
+  }
+  return text;
 };
 
 const convert = (array: string[]) => {
@@ -180,7 +186,7 @@ export default function TeamFinder() {
         </div>
 
         <div className="flex justify-center items-center flex-col mt-12 w-full lg:w-1/2 ">
-          {people.length > 0
+          {people && people.length > 0
             ? people.map((person, index) => (
                 <div
                   key={index}
@@ -188,9 +194,11 @@ export default function TeamFinder() {
                 >
                   <div className="flex w-full lg:w-1/3 lg:justify-between">
                     <p className="text-white font-bold mr-3 lg:mr-0">
-                      {person.name}
+                      {convertShortText(person.name)}
                     </p>
-                    <p className="text-white font-bold">{person.elo}</p>
+                    <p className="text-white font-bold">
+                      {convertShortText(`${person.elo}`)}
+                    </p>
                   </div>
                   <button
                     className="flex justify-center items-center p-3 px-4 text-white font-bold bg-blue-800 rounded-lg uppercase hover:bg-blue-900"
