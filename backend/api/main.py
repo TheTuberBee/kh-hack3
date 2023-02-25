@@ -5,6 +5,7 @@ from api.models import *
 from http import HTTPStatus
 import json
 from flask_cors import CORS, cross_origin
+from api.matchmaking import *
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -271,3 +272,26 @@ def fix():
         team_a_players = []
 
     )
+
+# teammate finder
+@app.get("/teammate_finder")
+@cross_origin()
+def teammate_finder_get():
+    rank: str = request.args.get("rank", type = str)
+    position: str = request.args.get("position", type = str)
+    region: str = request.args.get("region", type = str)
+    language: str = request.args.get("language", type = str)
+
+    authToken = request.headers.get("Authorization")
+    if authToken is not None:
+        token = authToken.split(" ")[1]
+        perms = authenticate(token)
+        if not perms.is_staff():
+            return "Unauthorized.", HTTPStatus.UNAUTHORIZED
+
+    # get user's elo
+    user = perms.get_user()
+    elo = user.elo
+
+    find_teammate = Matchmaking(position, elo, rank, region, language)
+    find_teammate.find_teammate()
