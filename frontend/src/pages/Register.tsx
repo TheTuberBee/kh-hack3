@@ -26,12 +26,12 @@ export default function Register() {
       setError("");
     }
 
-    const registerResponse = await register(name, email, password);
+    const registerResponse: any = await register(name, email, password);
 
     if (registerResponse.status < 400) {
       navigate("/login");
     } else {
-      setError(registerResponse.data);
+      setError("Invalid data");
     }
   };
 
