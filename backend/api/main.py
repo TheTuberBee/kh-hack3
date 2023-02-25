@@ -19,9 +19,9 @@ app.config["MONGODB_HOST"] = DB_URI
 db = MongoEngine(app)
 
 
-def authenticate():
+def authenticate(token: str):
     try:
-        return User.authenticate_token(request.cookies.get("token"))
+        return User.authenticate_token(token)
     except KeyError:
         # fall back to default permissions
         return User.Permissions()
@@ -40,14 +40,13 @@ def _login_password(email: str, password: str):
     if not user.check_password(password):
         return "Wrong password.", HTTPStatus.BAD_REQUEST
 
-    res = jsonify(user_id = str(user.pk))
     token = User.issue_token(str(user.pk))
+    res = jsonify(user_id = str(user.pk), token = str(token))
     res.set_cookie(
         key = "token",
         value = token,
         max_age = 400 * 24 * 3600,
-        httponly = False,
-        samesite = "Strict",
+        httponly = False
     )
     return res
 
@@ -56,13 +55,12 @@ def _login_reissue(token: str):
     new, user_id = User.reissue_token(token)
     if new is None:
         return "Token invalid or account was modified and must relogin.", HTTPStatus.BAD_REQUEST
-    res = jsonify(user_id = user_id)
+    res = jsonify(user_id = user_id, token = token)
     res.set_cookie(
         key = "token",
         value = new,
         max_age = 400 * 24 * 3600,
-        httponly = False,
-        samesite = "Strict",
+        httponly = False
     )
     return res
 
@@ -72,7 +70,9 @@ def _login_reissue(token: str):
 def login_get():
     email = request.args.get("email")
     password = request.args.get("password")
-    old = request.cookies.get("token")
+    authToken = request.headers.get("Authorization")
+    if authToken is not None:
+        old = authToken.split(" ")[1]
 
     if email is not None and password is not None:
         return _login_password(email, password)
@@ -94,10 +94,12 @@ def user_post():
     if email is None or password is None or name is None:
         return "Bad request.", HTTPStatus.BAD_REQUEST
 
-    perms = authenticate()
-
-    if staff is True and not perms.is_staff():
-        return "Unauthorized.", HTTPStatus.UNAUTHORIZED
+    authToken = request.headers.get("Authorization")
+    if authToken is not None:
+         token = authToken.split(" ")[1]
+         perms = authenticate(token)
+         if staff is True and not perms.is_staff():
+          return "Unauthorized.", HTTPStatus.UNAUTHORIZED
 
     email = email.lower()
     if User.objects(email = email).count() > 0:
@@ -118,7 +120,12 @@ def user_post():
 @app.get("/user/<string:id>")
 @cross_origin()
 def user_get(id):
-    perms = authenticate()
+    authToken = request.headers.get("Authorization")
+    if authToken is None:
+        return "Unauthorized.", HTTPStatus.UNAUTHORIZED
+    
+    token = authToken.split(" ")[1]
+    perms = authenticate(token)
 
     if not perms.is_staff() and id != perms.user_id:
         return "Unauthorized.", HTTPStatus.UNAUTHORIZED
