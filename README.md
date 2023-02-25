@@ -9,6 +9,7 @@ To setup the project:
 3.  Run npm i and npm run start
 4.  Open a new terminal
 5.  Cd into the backend folder
-6.  Run npm i and npm run build and dev
+6.  Setup a python virtual enviroment
+7.  Run the flask app
 
 Congratulations, you now have a working app!
