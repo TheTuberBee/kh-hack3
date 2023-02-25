@@ -95,14 +95,11 @@ def user_post():
         return "Bad request.", HTTPStatus.BAD_REQUEST
 
     authToken = request.headers.get("Authorization")
-    if authToken is None:
-        return "Unauthorized.", HTTPStatus.UNAUTHORIZED
-    
-    token = authToken.split(" ")[1]
-    perms = authenticate(token)
-
-    if staff is True and not perms.is_staff():
-        return "Unauthorized.", HTTPStatus.UNAUTHORIZED
+    if authToken is not None:
+         token = authToken.split(" ")[1]
+         perms = authenticate(token)
+         if staff is True and not perms.is_staff():
+          return "Unauthorized.", HTTPStatus.UNAUTHORIZED
 
     email = email.lower()
     if User.objects(email = email).count() > 0:
