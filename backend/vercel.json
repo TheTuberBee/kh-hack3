@@ -1,5 +1,10 @@
 {
     "rewrites": [
-      { "source": "/(.*)", "destination": "/api/main" }
-    ]
-  }
+        { "source": "/(.*)", "destination": "/api/main" }
+    ],
+    "functions": {
+        "api/main.py": {
+            "includeFiles": "api/**"
+        }
+    }
+}
