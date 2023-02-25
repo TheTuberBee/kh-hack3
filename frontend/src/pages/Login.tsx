@@ -16,7 +16,9 @@ export default function Login() {
     }
   }, [loggedIn, navigate]);
 
-  const handleLogin = async () => {
+  const handleLogin = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+
     if (email.trim() === "" || password.trim() === "") {
       setError("Please enter all fields");
     } else {
@@ -25,8 +27,8 @@ export default function Login() {
 
     const loginResponse = await login(email, password);
 
-    if (loginResponse.status === 200) {
-      console.log(loginResponse.data);
+    if (loginResponse.status < 400) {
+      navigate("/");
     } else {
       setError(loginResponse.data);
     }
@@ -73,7 +75,7 @@ export default function Login() {
               Login
             </button>
           </div>
-          {error.trim().length > 0 && (
+          {error && error.trim().length > 0 && (
             <div className="text-red-500">{error}</div>
           )}
         </form>

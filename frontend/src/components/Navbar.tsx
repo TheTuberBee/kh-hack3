@@ -12,7 +12,7 @@ export default function Navbar() {
 
   const handleLogout = () => {
     dispatch(setLoggedOut());
-    localStorage.removeItem("token");
+    document.cookie = "token=;";
     navigate("/login");
     window.location.reload();
   };
@@ -25,6 +25,9 @@ export default function Navbar() {
             <Link
               className="text-sm font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase text-white md:text-lg lg:text-xl"
               to={loggedIn ? "/" : "/login"}
+              onClick={() => {
+                document.documentElement.requestFullscreen();
+              }}
             >
               EsportManager 2023 - ELO System
             </Link>

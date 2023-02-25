@@ -18,7 +18,7 @@ export default function Home() {
         <h1
           className={`${
             firstLoad.current && "fadeDown"
-          } text-white font-bold uppercase text-5xl mt-36 md:text-8xl`}
+          } text-white font-bold uppercase text-5xl mt-40 md:text-8xl`}
           id="mainTitle"
         >
           Welcome
