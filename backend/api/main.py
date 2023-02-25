@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, Response, make_response
 from flask_mongoengine import MongoEngine
 import os
-from models import *
+from api.models import *
 from http import HTTPStatus
 import json
 
@@ -123,7 +123,3 @@ def user_get(id):
         "name": user.name,
         "staff": user.staff,
     }
-
-
-if __name__ == '__main__':
-    app.run()
