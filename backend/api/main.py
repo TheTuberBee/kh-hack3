@@ -116,6 +116,7 @@ def user_post():
     if staff is not None:
         user.staff = staff
     user.last_modified = int(time.time())
+    user.selected_games = []
 
     user.save()
     return "", HTTPStatus.CREATED
@@ -135,6 +136,7 @@ def user_get(id):
         "email": user.email,
         "name": user.name,
         "staff": user.staff,
+        "selected_games": user.selected_games
     }
 
 
@@ -190,3 +192,40 @@ def games_get():
             "team_size": game.team_size,
         })
     return jsonify(games)
+
+
+@app.post("/users/<string:id>/selected_games")
+@cross_origin()
+def games_post(id):
+    game: str = request.args.get("game", type = str)
+
+    perms = authenticate()
+    if not perms.is_staff() and id != perms.user_id:
+        return "Unauthorized.", HTTPStatus.UNAUTHORIZED
+
+    user = User.objects(pk = id)[0]
+
+    user.selected_games.append(game)
+
+    user.save()
+
+    return "", HTTPStatus.CREATED
+
+
+@app.delete("/users/<string:id>/selected_games")
+@cross_origin()
+def games_delete(id):
+    game: str = request.args.get("game", type = str)
+
+    perms = authenticate()
+    if not perms.is_staff() and id != perms.user_id:
+        return "Unauthorized.", HTTPStatus.UNAUTHORIZED
+
+    user = User.objects(pk = id)[0]
+
+    user.selected_games.remove(game)
+
+    user.save()
+
+    return "", HTTPStatus.CREATED
+

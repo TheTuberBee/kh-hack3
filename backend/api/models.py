@@ -8,6 +8,14 @@ from api.elo import *
 # generate one with secrets.token_urlsafe(nbytes = 16)
 jwt_secret: str = os.environ["JWT_SECRET"]
 
+
+class Game(mongo.Document):
+    name = mongo.StringField()
+    factor_names = mongo.ListField(field = mongo.StringField())
+    factor_values = mongo.ListField(field = mongo.FloatField())
+    team_size = mongo.IntField()
+
+
 class User(mongo.Document):
     email = mongo.StringField()
     password = mongo.StringField()
@@ -15,7 +23,7 @@ class User(mongo.Document):
     staff = mongo.BooleanField(default = False)
     name = mongo.StringField()
     riot_id = mongo.StringField()
-    selected_games = mongo.ListField(field = mongo.StringField())
+    selected_games = mongo.ListField(field = mongo.ReferenceField(document_type = Game))
 
     class Permissions:
         def __init__(self, claims: dict = {}):
@@ -116,13 +124,6 @@ class User(mongo.Document):
         
     def __hash__(self):
         return hash(str(self.pk))
-
-
-class Game(mongo.Document):
-    name = mongo.StringField()
-    factor_names = mongo.ListField(field = mongo.StringField())
-    factor_values = mongo.ListField(field = mongo.FloatField())
-    team_size = mongo.IntField()
 
 
 class Match(mongo.Document):
