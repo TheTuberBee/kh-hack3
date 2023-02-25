@@ -9,12 +9,16 @@ export const getAllGames = async () => {
   }
 };
 
-export const addGame = async (game: number) => {
+export const addGame = async (game: string) => {
   try {
     const uid = localStorage.getItem("uid");
-    const response = await axios.post("/games", null, {
-      params: { uid, game },
-    });
+    const response = await axios.post(
+      "/users/" + uid + "/selected_games",
+      null,
+      {
+        params: { game: `${game}` },
+      }
+    );
 
     return response;
   } catch (error) {
@@ -22,11 +26,11 @@ export const addGame = async (game: number) => {
   }
 };
 
-export const removeGame = async (game: number) => {
+export const removeGame = async (game: string) => {
   try {
     const uid = localStorage.getItem("uid");
-    const response = await axios.delete("/games", {
-      params: { uid, game },
+    const response = await axios.delete("/users/" + uid + "/selected_games", {
+      params: { game: `${game}` },
     });
 
     return response;

@@ -19,7 +19,7 @@ app.config["MONGODB_HOST"] = DB_URI
 db = MongoEngine(app)
 
 
-def authenticate(token: str):
+def authenticate():
     try:
         auth_token = request.headers.get("Authorization")
         if auth_token is None:
