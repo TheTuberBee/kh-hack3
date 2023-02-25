@@ -155,7 +155,7 @@ def games_post():
 
 @app.delete("/games")
 @cross_origin()
-def games_post():
+def games_delete():
      uid : str = request.args.get("uid", type = str)
      game : str = request.args.get("game", type = str)
 
