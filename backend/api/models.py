@@ -13,7 +13,7 @@ class User(mongo.Document):
     last_modified = mongo.IntField()
     staff = mongo.BooleanField(default = False)
     name = mongo.StringField()
-    selectedGames = mongo.ListField(mongo.StringField())
+    selected_games = mongo.ListField(mongo.IntField())
 
     class Permissions:
         def __init__(self, claims: dict = {}):

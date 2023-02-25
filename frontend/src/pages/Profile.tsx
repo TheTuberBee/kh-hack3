@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -15,6 +15,7 @@ import { Line, Doughnut, Bar } from "react-chartjs-2";
 import { useSelector } from "react-redux";
 import { Modal, Box } from "@mui/material";
 import { register } from "../api/auth";
+import { addGame } from "../api/game";
 
 const style = {
   position: "absolute" as "absolute",
@@ -175,7 +176,22 @@ export default function Profile() {
     },
   ]);
 
-  const handleSelectImage = (id: number) => {
+  useEffect(() => {
+    if (currentUser) {
+      currentUser.selected_games.map((game: number) => {
+        const gameProg = picture[game];
+        setPicture((prev: any) => [
+          ...prev,
+          { url: gameProg.url, selected: true },
+        ]);
+        return null;
+      });
+    }
+  }, [currentUser, picture]);
+
+  const handleSelectImage = async (id: number) => {
+    await addGame(id);
+
     const newPicture = picture.map((pic, index) => {
       if (index === id) {
         return {
