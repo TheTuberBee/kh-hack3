@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { login } from "../api/auth";
+import { getCurrentUser, login } from "../api/auth";
 import { useSelector, useDispatch } from "react-redux";
 import { setLoggedIn } from "../redux/actions/authAction";
 
@@ -35,6 +35,8 @@ export default function Login() {
       loginResponse.data.user_id
     ) {
       localStorage.setItem("uid", loginResponse.data.user_id);
+      const currentUser = await getCurrentUser(loginResponse.data.user_id);
+      console.log(currentUser);
       dispatch(setLoggedIn(true));
     } else {
       setError("Wrong email or password");
