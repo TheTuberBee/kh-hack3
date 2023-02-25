@@ -298,6 +298,7 @@ def teammate_finder_get():
     game = Game.objects(pk = "63fa20423cab53f5ff515119")[0]
 
     all_players_data = Match.analyze(player_filter, match_filter, game)["players"]
+    print(all_players_data)
 
     player_data = None
 
