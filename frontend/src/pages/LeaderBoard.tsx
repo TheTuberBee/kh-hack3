@@ -30,12 +30,12 @@ export default function LeaderBoard() {
   const [games, setGames] = useState<any[]>([]);
 
   const [allPlayers, setAllPlayers] = useState<any>([]);
-  const [modalData, setModalData] = useState<any>();
+  const [modalData, setModalData] = useState<string[]>();
   const [tags, setTags] = useState<string[]>();
   const [isTournament, setIsTournament] = useState(false);
 
   const handleOpenModal = (index: number) => {
-    setModalData(Object.values(allPlayers[index]));
+    setModalData(Object.values(allPlayers[index].factors));
     setIsOpen(true);
   };
 
@@ -116,9 +116,9 @@ export default function LeaderBoard() {
           >
             Details
           </h1>
-          {modalData && modalData.factors && (
+          {modalData && (
             <>
-              {modalData.factors.map((data: string, index: number) => {
+              {modalData.map((data: string, index: number) => {
                 return (
                   <h2 className="" key={index}>
                     {tags && tags[index]}:{" "}
