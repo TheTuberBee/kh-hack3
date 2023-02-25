@@ -12,7 +12,7 @@ export default function Navbar() {
 
   const handleLogout = () => {
     dispatch(setLoggedOut());
-    localStorage.removeItem("token");
+    document.cookie = "token=;";
     navigate("/login");
     window.location.reload();
   };
