@@ -297,6 +297,9 @@ def teammate_finder_get():
 
     index = 0
 
+    before_player = []
+    after_player = []
+
     # find the player in the all_players_data
     for player in all_players_data:
         if player["id"] == user_id:
