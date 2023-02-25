@@ -60,14 +60,42 @@ match = get_match_by_id(match_ids[0])
 print(match)
 
 users_a = []
+stats_a = []
 users_b = []
+stats_b = []
 
 for participant in match["info"]["participants"]:
     if participant["teamId"] == 100:
-        users_a.append(participant)
+        users_a.append(user_lookup(participant["puuid"]))
+        stats_a.append([
+            participant["assists"],
+            participant["baronKills"],
+            participant["deaths"],
+            participant["dragonKills"],
+            participant["goldEarned"],
+            participant["goldSpent"],
+            participant["inhibitorKills"],
+            participant["itemsPurchased"],
+            participant["kills"],
+            participant["totalHealsOnTeammates"],
+            participant["turretKills"]
+        ])
     else:
-        users_b.append(participant)
-        
+        users_b.append(user_lookup(participant["puuid"]))
+        stats_b.append([
+            participant["assists"],
+            participant["baronKills"],
+            participant["deaths"],
+            participant["dragonKills"],
+            participant["goldEarned"],
+            participant["goldSpent"],
+            participant["inhibitorKills"],
+            participant["itemsPurchased"],
+            participant["kills"],
+            participant["totalHealsOnTeammates"],
+            participant["turretKills"]
+        ])
+
 for team in match["info"]["teams"]:
     if team["win"]:
         winner_team = team["teamId"]
