@@ -186,6 +186,7 @@ def games_get():
     for game in Game.objects:
         game: Game
         games.append({
+            "id": str(game.pk),
             "name": game.name,
             "factor_names": game.factor_names,
             "factor_values": game.factor_values,

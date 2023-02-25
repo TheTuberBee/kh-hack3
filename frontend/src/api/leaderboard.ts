@@ -1,13 +1,13 @@
 import axios from "../config/axios";
 
 export const getLeaderBoardData = async (
-  gameName: string,
+  gameId: number,
   startTime: number,
   endTime: number
 ) => {
   try {
     const response = await axios.get("/leaderboard", {
-      params: { gameName, startTime, endTime },
+      params: { gameId, startTime, endTime },
     });
 
     return response;

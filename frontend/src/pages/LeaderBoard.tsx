@@ -6,6 +6,7 @@ import { StaticDateRangePicker } from "@mui/x-date-pickers-pro/StaticDateRangePi
 import { DateRange } from "@mui/x-date-pickers-pro/DateRangePicker";
 import { Dayjs } from "dayjs";
 import { getLeaderBoardData } from "../api/leaderboard";
+import { getAllGames } from "../api/game";
 
 const style = {
   position: "absolute" as "absolute",
@@ -26,19 +27,30 @@ export default function LeaderBoard() {
   const [isOpen2, setIsOpen2] = useState(false);
   const [value, setValue] = useState<DateRange<Dayjs>>([null, null]);
   const [gameName, setGameName] = useState<string>("League of Legends");
+  const [games, setGames] = useState<any[]>([]);
 
   const handleOpenModal = () => {
     setIsOpen(true);
   };
 
   useEffect(() => {
+    const getGames = async () => {
+      const response: any = await getAllGames();
+      console.log(response);
+      setGames(response.data);
+    };
+
+    getGames();
+  }, []);
+
+  useEffect(() => {
     const getLeaderBoard = async (
-      gameName: string,
+      gameId: number,
       convertedToUnixBegin: number,
       convertedToUnixEnd: number
     ) => {
       const response = await getLeaderBoardData(
-        gameName,
+        gameId,
         convertedToUnixBegin,
         convertedToUnixEnd
       );
@@ -54,7 +66,11 @@ export default function LeaderBoard() {
         new Date(value[1]?.format("DD/MM/YYYY")).getTime() / 1000
       );
       if (convertedToUnixBegin && convertedToUnixEnd) {
-        getLeaderBoard(gameName, convertedToUnixBegin, convertedToUnixEnd);
+        getLeaderBoard(
+          games.findIndex((game) => game.name === gameName),
+          convertedToUnixBegin,
+          convertedToUnixEnd
+        );
       }
     }
   }, [gameName, value]);
