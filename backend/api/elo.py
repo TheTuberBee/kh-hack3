@@ -1,10 +1,55 @@
 import math
 
-def _avg(values: list[int]) -> float:
-    return sum(values) / len(values)
+def _avg(values: list[int]):
+    n = 0
+    sum = 0
+    for value in values:
+        if value is not None:
+            n += 1
+            sum += value
+    try:
+        return sum / n
+    except ZeroDivisionError:
+        return None
+    
+def _remove_unknowns(values1: list[int], values2: list[int]):
+    n = 0
+    sum = 0
+    
+    for value in values1 + values2:
+        if value is not None:
+            n += 1
+            sum += value
+
+    if n == 0:
+        return [None], [None]
+    
+    avg = sum / n
+
+    new1 = []
+    for value in values1:
+        if value is None:
+            new1.append(avg)
+        else:
+            new1.append(value)
+
+    new2 = []
+    for value in values2:
+        if value is None:
+            new2.append(avg)
+        else:
+            new2.append(value)
+
+    return new1, new2
 
 # Predicts the chance of Team A winning
 def _prediction(team_a: list[int], team_b: list[int]) -> float:
+    a, b = _remove_unknowns(team_a, team_b)
+    print(a, b)
+    avg_a = _avg(a)
+    avg_b = _avg(b)
+    if avg_a is None or avg_b is None:
+        return 0.5
     return 1 / (1 + (10.0 ** ((_avg(team_b) - _avg(team_a)) / 400)))
 
 # Calculates the outcome
@@ -47,6 +92,7 @@ def elo_change(
 ) -> tuple[list[int], list[int]]:
     
     prediction_a = _prediction(team_a_elo, team_b_elo)
+    print(team_a_elo)
     result_a = _result(team_a_score, team_b_score)
     delta_team_score_a = _delta_team_score(result_a, prediction_a, team_size)
 
