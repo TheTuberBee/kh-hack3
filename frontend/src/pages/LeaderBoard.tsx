@@ -30,7 +30,7 @@ export default function LeaderBoard() {
   const [games, setGames] = useState<any[]>([]);
 
   const [allPlayers, setAllPlayers] = useState<any>([]);
-  const [modalData, setModalData] = useState<string[]>();
+  const [modalData, setModalData] = useState<any>();
   const [tags, setTags] = useState<string[]>();
   const [isTournament, setIsTournament] = useState(false);
 
@@ -116,12 +116,12 @@ export default function LeaderBoard() {
           >
             Details
           </h1>
-          {modalData && (
+          {modalData && modalData.factors && (
             <>
-              {modalData.map((data, index) => {
+              {modalData.factors.map((data: string, index: number) => {
                 return (
                   <h2 className="" key={index}>
-                    {tags && tags[index]}:
+                    {tags && tags[index]}:{" "}
                     <span className="font-bold">{data}</span>
                   </h2>
                 );
