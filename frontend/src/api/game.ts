@@ -12,3 +12,16 @@ export const addGame = async (game: number) => {
     return error;
   }
 };
+
+export const removeGame = async (game: number) => {
+  try {
+    const uid = localStorage.getItem("uid");
+    const response = await axios.delete("/games", {
+      params: { uid, game },
+    });
+
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
