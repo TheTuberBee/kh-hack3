@@ -157,7 +157,7 @@ def leaderboard_get():
     
     game = Game.objects(pk = game_id)[0]
 
-    match_filter = lambda match: (end_time <= time.time() and time.time() <= start_time)
+    match_filter = lambda match: (start_time <= match.timestamp and match.timestamp <= end_time)
 
     if restricted:
         _func = match_filter
