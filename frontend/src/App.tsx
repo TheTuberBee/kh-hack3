@@ -14,14 +14,28 @@ import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import LeaderBoard from "./pages/LeaderBoard";
 import TeamFinder from "./pages/TeamFinder";
-import { setLoggedIn } from "./redux/actions/authAction";
+import { setCurrentUser, setLoggedIn } from "./redux/actions/authAction";
 import "./index.css";
+import { getCurrentUser } from "./api/auth";
 
 function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
   const state: any = useSelector((state) => state);
+
+  useEffect(() => {
+    const uid = localStorage.getItem("uid");
+    const getCurrentUser2 = async () => {
+      const user = await getCurrentUser(uid as string);
+      console.log(user);
+      dispatch(setCurrentUser(user));
+    };
+
+    if (!state.currentUser && uid) {
+      getCurrentUser2();
+    }
+  }, [dispatch, state.currentUser]);
 
   useEffect(() => {
     const uid = localStorage.getItem("uid");
@@ -34,7 +48,7 @@ function App() {
       dispatch(setLoggedIn(false));
       navigate("/login");
     }
-  }, [dispatch, location.pathname, navigate, state.loggedIn]);
+  }, [dispatch, location.pathname, navigate]);
 
   return (
     <>
