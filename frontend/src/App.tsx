@@ -13,6 +13,9 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import { setLoggedIn, setToken } from "./redux/actions/authAction";
 import Profile from "./pages/Profile";
+import LeaderBoard from "./pages/LeaderBoard";
+import TeamFinder from "./pages/TeamFinder";
+import "./index.css";
 
 function App() {
   const navigate = useNavigate();
@@ -40,6 +43,12 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         {state.loggedIn && <Route path="/profile" element={<Profile />} />}
+        {state.loggedIn && (
+          <Route path="/leaderboard" element={<LeaderBoard />} />
+        )}
+        {state.loggedIn && (
+          <Route path="/teamfinder" element={<TeamFinder />} />
+        )}
         {state.loggedIn && <Route path="/" element={<Home />} />}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
