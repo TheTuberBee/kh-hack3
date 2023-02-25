@@ -142,11 +142,12 @@ def user_get(id):
 @cross_origin()
 def leaderboard_get():
 
-    timespan: str = request.args.get("timespan", type = str)
+    start_time: int = request.args.get("start_time", type = int)
+    end_time: int = request.args.get("end_time", type = int)
     game_id: str = request.args.get("game", type = str)
     restricted: bool = request.args.get("restricted", type = json.loads)
 
-    if timespan is None or game_id is None:
+    if start_time is None or end_time is None or game_id is None:
         return "Bad Request.", HTTPStatus.BAD_REQUEST
     
     if restricted is None:
@@ -154,12 +155,7 @@ def leaderboard_get():
     
     game = Game.objects(pk = game_id)[0]
 
-    if timespan == "year":
-        match_filter = lambda match: (time.time() - match.timestamp < 365 * 24 * 3600)
-    if timespan == "month":
-        match_filter = lambda match: (time.time() - match.timestamp < 30 * 24 * 3600)
-    if timespan == "week":
-        match_filter = lambda match: (time.time() - match.timestamp < 7 * 24 * 3600)
+    match_filter = lambda match: (end_time <= time.time() and time.time() <= start_time)
 
     if restricted:
         _func = match_filter
@@ -184,6 +180,7 @@ def games_get():
     for game in Game.objects:
         game: Game
         games.append({
+            "id": str(game.pk),
             "name": game.name,
             "factor_names": game.factor_names,
             "factor_values": game.factor_values,

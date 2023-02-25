@@ -45,7 +45,6 @@ def _remove_unknowns(values1: list[int], values2: list[int]):
 # Predicts the chance of Team A winning
 def _prediction(team_a: list[int], team_b: list[int]) -> float:
     a, b = _remove_unknowns(team_a, team_b)
-    print(a, b)
     avg_a = _avg(a)
     avg_b = _avg(b)
     if avg_a is None or avg_b is None:
@@ -92,7 +91,6 @@ def elo_change(
 ) -> tuple[list[int], list[int]]:
     
     prediction_a = _prediction(team_a_elo, team_b_elo)
-    print(team_a_elo)
     result_a = _result(team_a_score, team_b_score)
     delta_team_score_a = _delta_team_score(result_a, prediction_a, team_size)
 
