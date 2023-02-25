@@ -294,6 +294,7 @@ def teammate_finder_get():
 
     player_filter = lambda player: True
     match_filter = lambda match: True
+    print("eljut1")
     game = Game.objects(pk = "63fa20423cab53f5ff515119")[0]
 
     all_players_data = Match.analyze(player_filter, match_filter, game)["players"]
@@ -301,7 +302,7 @@ def teammate_finder_get():
     player_data = None
 
     index = 0
-
+    print("eljut12")
     # find the player in the all_players_data
     for player in all_players_data:
         if player["id"] == user_id:
@@ -314,7 +315,7 @@ def teammate_finder_get():
             break
         index += 1
 
-
+    print("eljut13")
     # create the data for the frontend list
     # data needed: name, elo, email, killcount, deathcount, assistcount
 
@@ -330,7 +331,7 @@ def teammate_finder_get():
         # get user's email from the database using the player's id
         user = User.objects(pk = player["id"])[0]
 
-
+        print("eljut14")
         players.append({
             "name": player["name"],
             "elo": player["rating"],
@@ -343,7 +344,7 @@ def teammate_finder_get():
 
     # get player's email from the database
     user = User.objects(pk = user_id)[0]
-
+    print("eljut17")
     # add the player
     players.append({
         "name": "You",
@@ -355,7 +356,7 @@ def teammate_finder_get():
     })
 
     index = 0
-
+    print("eljut6")
     # add the players after the player 
     for player in after_player:  
         if index >= 5:
