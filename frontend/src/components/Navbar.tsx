@@ -1,18 +1,15 @@
 import React, { useState } from "react";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { Link, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { setLoggedOut } from "../redux/actions/authAction";
+import { useSelector } from "react-redux";
 
 export default function Navbar() {
   const [navbarOpen, setNavbarOpen] = useState(false);
   const loggedIn = useSelector((state: any) => state.loggedIn);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    dispatch(setLoggedOut());
-    document.cookie = "token=;";
+    localStorage.removeItem("uid");
     navigate("/login");
     window.location.reload();
   };

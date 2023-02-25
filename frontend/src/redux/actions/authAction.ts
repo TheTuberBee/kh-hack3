@@ -1,16 +1,8 @@
 import {
-  SET_TOKEN,
   SET_CURRENT_USER,
   SET_LOGGED_IN,
   SET_LOGGED_OUT,
 } from "../actionTypes/actionTypes";
-
-const setToken = (token: string) => {
-  return {
-    type: SET_TOKEN,
-    payload: token,
-  };
-};
 
 const setCurrentUser = (currentUser: any) => {
   return {
@@ -32,4 +24,4 @@ const setLoggedOut = () => {
   };
 };
 
-export { setToken, setCurrentUser, setLoggedIn, setLoggedOut };
+export { setCurrentUser, setLoggedIn, setLoggedOut };
