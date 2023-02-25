@@ -75,17 +75,25 @@ export default function LeaderBoard() {
         <h1 className="text-white text-center text-6xl font-bold mb-10">
           LeaderBoard
         </h1>
-        <div className="flex flex-row items-center w-1/2 my-4">
+        <div className="flex flex-row items-center w-7/12 my-4">
           <h1 className="text-white text-center text-2xl font-bold mr-5">
             Game:
           </h1>
-          <select className="w-full bg-transparent border-b-2 border-white text-white text-2xl font-bold">
-            <option value="lol">League of Legends</option>
-            <option value="csgo">CS GO</option>
-            <option value="valorant">Valorant</option>
-            <option value="pubg">PlayerUnknown's Battlegrounds</option>
-            <option value="teamfighttactics">Teamfight Tactics</option>
-          </select>
+          <div className="flex justify-between w-full">
+            <select className="w-full bg-transparent border-b-2 border-white text-white text-2xl font-bold mr-4">
+              <option value="lol">League of Legends</option>
+              <option value="csgo">CS GO</option>
+              <option value="valorant">Valorant</option>
+              <option value="pubg">PlayerUnknown's Battlegrounds</option>
+              <option value="teamfighttactics">Teamfight Tactics</option>
+            </select>
+
+            <select className="w-1/2 bg-transparent border-b-2 border-white text-white text-2xl font-bold">
+              <option value="lol">This week</option>
+              <option value="csgo">This month</option>
+              <option value="valorant">This year</option>
+            </select>
+          </div>
         </div>
         <div className="flex flex-col w-full mx-2 lg:w-3/4 lg:mx-0">
           <div className="overflow-x-auto">
