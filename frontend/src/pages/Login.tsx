@@ -36,8 +36,8 @@ export default function Login() {
     ) {
       localStorage.setItem("uid", loginResponse.data.user_id);
       localStorage.setItem("token", loginResponse.data.token);
-      const user = await getCurrentUser(loginResponse.data.user_id);
-      console.log(user);
+      const user: any = await getCurrentUser(loginResponse.data.user_id);
+      dispatch(setCurrentUser(user.data));
       dispatch(setLoggedIn(true));
     } else {
       setError("Wrong email or password");

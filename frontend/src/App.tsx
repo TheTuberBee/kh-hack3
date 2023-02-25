@@ -27,9 +27,8 @@ function App() {
   useEffect(() => {
     const uid = localStorage.getItem("uid");
     const getCurrentUser2 = async () => {
-      const user = await getCurrentUser(uid as string);
-      console.log(user);
-      dispatch(setCurrentUser(user));
+      const user: any = await getCurrentUser(uid as string);
+      dispatch(setCurrentUser(user.data));
     };
 
     if (!state.currentUser && uid) {
