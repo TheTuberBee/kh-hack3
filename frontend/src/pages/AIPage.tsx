@@ -5,6 +5,7 @@ export default function AIPage() {
   const [generatedText, setGeneratedText] = useState<string>("");
   const [buttonClicked, setButtonClicked] = useState<boolean>(false);
   const [countDown, setCountDown] = useState<number>(30);
+  const [name, setName] = useState("");
 
   const handleGeneration = async () => {
     setButtonClicked(true);
@@ -15,7 +16,7 @@ export default function AIPage() {
       }
     }, 1000);
 
-    const response: any = getAIResponse(123, generatedText);
+    const response: any = getAIResponse(123, name);
 
     setGeneratedText(response.data);
     setButtonClicked(false);
@@ -32,6 +33,8 @@ export default function AIPage() {
           type="text"
           className="mr-4 text-center text-white text-lg w-96 h-10 mt-12 bg-transparent rounded-lg pl-4 border-b-4 border-white focus:outline-none placeholder:text-white mx-3 lg:mx-0 lg:mr-5"
           placeholder="Enter your RIOT ID"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
         />
         <button
           className=" flex justify-center items-center p-3 px-4 text-white font-bold bg-blue-800 rounded-lg mt-10 uppercase  hover:bg-blue-900 lg:w-1/3"
