@@ -195,13 +195,27 @@ export default function TeamFinder() {
                   key={index}
                   className="flex justify-between items-center border border-white border-2 rounded-lg w-11/12 p-5 mb-5"
                 >
-                  <div className="flex w-full lg:w-1/3 lg:justify-between">
+                  <div className="flex w-full items-center lg:w-1/3 lg:justify-between">
                     <p className="text-white font-bold mr-3 lg:mr-0">
                       {convertShortText(person.name)}
                     </p>
-                    <p className="text-white font-bold">
+                    <p className="text-white font-bold mr-6">
                       {convertShortText(`${person.elo}`)}
                     </p>
+                    {person.tags &&
+                      person.tags.length > 0 &&
+                      person.tags.map((tag: any, index: any) => {
+                        if (index < 3) {
+                          return (
+                            <p
+                              key={index}
+                              className="text-white font-bold p-2 mx-2 border-white border-2 rounded-lg"
+                            >
+                              {convertShortText(`${tag}`)}
+                            </p>
+                          );
+                        }
+                      })}
                   </div>
                   <button
                     className="flex justify-center items-center p-3 px-4 text-white font-bold bg-blue-800 rounded-lg uppercase hover:bg-blue-900"

@@ -25,7 +25,7 @@ export const getLeaderBoardData = async (
 export const getAIResponse = async (gameId: number, userId: string) => {
   try {
     const response = await axios.get("/ai", {
-      timeout: 30000,
+      timeout: 60000,
       params: {
         gameId: gameId,
         userId: userId,
