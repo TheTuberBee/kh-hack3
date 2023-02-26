@@ -305,4 +305,3 @@ def test_leaderboard():
 
     scoreboard = Match.analyze(player_filter, match_filter, game)
     print(scoreboard)
-

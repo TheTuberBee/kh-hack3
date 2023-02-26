@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Modal, Box } from "@mui/material";
+import { getPossibleFriends } from "../api/leaderboard";
 
 const style = {
   position: "absolute" as "absolute",
@@ -15,6 +16,30 @@ const style = {
   pb: 3,
 };
 
+const convertShortText = (text: string) => {
+  if (text.length > 20) {
+    return text.substring(0, 10) + "...";
+  }
+  return text;
+};
+
+const convert = (array: string[]) => {
+  let currentIndex = array.length,
+    randomIndex;
+
+  while (currentIndex !== 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex],
+    ];
+  }
+
+  return array;
+};
+
 export default function TeamFinder() {
   const [isOpen, setIsOpen] = useState(false);
   const [enabled, setEnabled] = useState(false);
@@ -22,18 +47,29 @@ export default function TeamFinder() {
   const [people, setPeople] = useState<any[]>([]);
   const [searched, setSearched] = useState(false);
 
-  const handleOpenModal = () => {
+  const [modalData, setModalData] = useState<any>();
+
+  const handleOpenModal = (id: number) => {
+    setModalData(people[id]);
     setIsOpen(true);
   };
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     setSearched(true);
-    const newOne = {
-      name: "Fwefwef",
-      email: "ewkjfwejf",
-    };
+    const response: any = await getPossibleFriends();
 
-    setPeople((prev) => [...prev, newOne]);
+    if (!enabled) {
+      setPeople(response.data);
+    } else {
+      setPeople(convert(response.data));
+    }
+
+    if (name.length > 0) {
+      const found = people.filter((person: any) =>
+        person.name.toLowerCase().includes(name)
+      );
+      setPeople(found.length > 0 ? found : []);
+    }
   };
 
   return (
@@ -51,21 +87,31 @@ export default function TeamFinder() {
           >
             Details
           </h1>
-          <h2 className="">
-            Name: <span className="font-bold">Jone Doe</span>
-          </h2>
-          <h2 className="">
-            Game: <span className="font-bold">Cs GO</span>
-          </h2>
-          <h2 className="">
-            Win count: <span className="font-bold">12313</span>
-          </h2>
-          <h2 className="">
-            Kill count: <span className="font-bold">123</span>
-          </h2>
-          <h2 className="">
-            Assist: <span className="font-bold">123</span>
-          </h2>
+          {modalData && (
+            <>
+              <h2 className="">
+                Name: <span className="font-bold">{modalData.name}</span>
+              </h2>
+              <h2 className="">
+                Email: <span className="font-bold">{modalData.email}</span>
+              </h2>
+              <h2 className="">
+                Kill count:{" "}
+                <span className="font-bold">{modalData.killcount}</span>
+              </h2>
+              <h2 className="">
+                Assist:{" "}
+                <span className="font-bold">{modalData.assistcount}</span>
+              </h2>
+              <h2 className="">
+                Deah: <span className="font-bold">{modalData.deathcount}</span>
+              </h2>
+              <h2 className="">
+                Overall ELO Score:{" "}
+                <span className="font-bold">{modalData.elo}</span>
+              </h2>
+            </>
+          )}
           <button
             onClick={() => setIsOpen(false)}
             className="flex w-full justify-center items-center p-3 px-4 text-white font-bold bg-blue-800 rounded-lg mt-7 uppercase hover:p-4 hover:px-5 hover:bg-blue-900"
@@ -109,10 +155,10 @@ export default function TeamFinder() {
                     onClick={() => {
                       setEnabled(!enabled);
                     }}
-                    className="w-11 h-6 bg-cyan-500 rounded-full peer  peer-focus:ring-green-300  peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"
+                    className="w-11 h-6 bg-red-500 rounded-full peer  peer-focus:ring-green-300  peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"
                   ></div>
                   <span className="ml-2 text-sm font-medium text-white">
-                    ON
+                    {enabled ? "Enemy" : "Teammate"}
                   </span>
                 </label>
               </div>
@@ -140,7 +186,7 @@ export default function TeamFinder() {
         </div>
 
         <div className="flex justify-center items-center flex-col mt-12 w-full lg:w-1/2 ">
-          {people.length > 0
+          {people && people.length > 0
             ? people.map((person, index) => (
                 <div
                   key={index}
@@ -148,13 +194,15 @@ export default function TeamFinder() {
                 >
                   <div className="flex w-full lg:w-1/3 lg:justify-between">
                     <p className="text-white font-bold mr-3 lg:mr-0">
-                      {person.name}
+                      {convertShortText(person.name)}
                     </p>
-                    <p className="text-white font-bold">{person.email}</p>
+                    <p className="text-white font-bold">
+                      {convertShortText(`${person.elo}`)}
+                    </p>
                   </div>
                   <button
                     className="flex justify-center items-center p-3 px-4 text-white font-bold bg-blue-800 rounded-lg uppercase hover:bg-blue-900"
-                    onClick={handleOpenModal}
+                    onClick={() => handleOpenModal(index)}
                   >
                     Detail
                   </button>
