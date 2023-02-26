@@ -303,6 +303,8 @@ def teammate_finder_get():
     player_data = None
 
     index = 0
+    before_player = []
+    after_player = []
     print("eljut12")
     # find the player in the all_players_data
     for player in all_players_data:
