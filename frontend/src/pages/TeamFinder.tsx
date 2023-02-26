@@ -202,6 +202,17 @@ export default function TeamFinder() {
                     <p className="text-white font-bold">
                       {convertShortText(`${person.elo}`)}
                     </p>
+                    {person.tags &&
+                      person.tags.length > 0 &&
+                      person.tags.map((tag: any, index: any) => {
+                        if (index < 3) {
+                          return (
+                            <p key={index} className="text-white font-bold">
+                              {convertShortText(`${tag}`)}
+                            </p>
+                          );
+                        }
+                      })}
                   </div>
                   <button
                     className="flex justify-center items-center p-3 px-4 text-white font-bold bg-blue-800 rounded-lg uppercase hover:bg-blue-900"

@@ -220,20 +220,12 @@ def ai_get():
     match_ids = lol.get_match_ids_by_puuid(riot_user.puuid, 0, 10)
     if len(match_ids) == 0:
         return "Not enough matches.", HTTPStatus.BAD_REQUEST
-    if len(match_ids) != 1:
-        match_ids = random.sample(match_ids, k=2)
 
-    results = []
-    for match_id in match_ids:
-        match = lol.get_match_by_id(match_id)
-        for participant in match["info"]["participants"]:
-            if participant["puuid"] == riot_user.puuid:
-                results.append(gpt3.get_opinion(participant)[1])
-                break
+    match = lol.get_match_by_id(match_ids[0])
+    for participant in match["info"]["participants"]:
+        if participant["puuid"] == riot_user.puuid:
+            result = gpt3.get_opinion(participant)[1]
     
-    result = results[0]
-    if len(results) == 2:
-        result = gpt3.combine_tags(results[0], results[1])
     
     result = ", ".join(result)
     resp = { "data": result }

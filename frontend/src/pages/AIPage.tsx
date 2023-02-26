@@ -4,7 +4,7 @@ import { getAIResponse } from "../api/leaderboard";
 export default function AIPage() {
   const [generatedText, setGeneratedText] = useState<string>("");
   const [buttonClicked, setButtonClicked] = useState<boolean>(false);
-  const [countDown, setCountDown] = useState<number>(30);
+  const [countDown, setCountDown] = useState<number>(60);
   const [name, setName] = useState("");
 
   useEffect(() => {
@@ -17,7 +17,7 @@ export default function AIPage() {
   }, [countDown, generatedText.length]);
 
   const handleGeneration = async () => {
-    setCountDown(30);
+    setCountDown(60);
     setButtonClicked(true);
 
     const interval = window.setInterval(() => {
@@ -71,7 +71,7 @@ export default function AIPage() {
       {buttonClicked && (
         <div className="flex justify-center items-center flex-col mt-12 w-full lg:w-1/2">
           <p className="text-white text-lg">Generating...</p>
-          <p className="text-white text-lg">Time left: {countDown}</p>
+          <p className="text-white text-lg">Estimated time left: {countDown}</p>
         </div>
       )}
       {generatedText && generatedText.length > 0 && (
