@@ -30,7 +30,7 @@ export default function LeaderBoard() {
   const [games, setGames] = useState<any[]>([]);
 
   const [allPlayers, setAllPlayers] = useState<any>([]);
-  const [modalData, setModalData] = useState<any>();
+  const [modalData, setModalData] = useState<string[]>();
   const [tags, setTags] = useState<string[]>();
   const [isTournament, setIsTournament] = useState(false);
 
