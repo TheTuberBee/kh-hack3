@@ -9,7 +9,7 @@ import openai
 openai.api_key = os.environ["OPENAI_API_KEY"]
 
 engine = "text-davinci-003"
-prompt = 'you get some texts, 2 of them are soccer team names (eg. Real Madrid). you can combine multiple words if needed. you also need to find the scores. the original text looks like this: "{TEAM1} {SCORE1} - {SCORE2} {TEAM2}".  give the answer in this format: {"team1": team1, "team2": team2, "score1", "score2"}'
+prompt = 'you get some texts, 2 of them are real soccer team names (eg. Real Madrid). you can combine multiple words if needed, but only using words from the given texts. we need only the main name of the team, Football Club is unneccessary. Tilbor and RCB are not teams! you also need to find the scores. the original text looks like this, no other text is needed: "{TEAM1} {SCORE1} - {SCORE2} {TEAM2}". give the answer in this json format: {"team1": team1, "team2": team2, "score1", "score2"}'
 temperature = 0.7
 max_tokens = 256
 n = 1
@@ -24,6 +24,7 @@ def read_stats(content):
     print('Texts:')
     all_text = ""
     for text in texts:
+        print(text.description)
         all_text += text.description
         all_text += "\n"
 
@@ -49,6 +50,7 @@ def read_stats(content):
     response_text = gpt_response.choices[0].text
 
     response_text = response_text.replace("\n", "")
+    response_text = response_text.replace("END", "")
     
     return response_text
 

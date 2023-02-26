@@ -1,6 +1,8 @@
 import os
 import openai as ai
 import time
+import lol_fetcher
+
 try:
     ai.api_key = os.environ["OPENAI_API_KEY"]
 except:
@@ -36,6 +38,14 @@ def generate_gpt3_response(user_text, print_output=False):
 def get_opinion(participant):
     stats = str(participant)
     prompt = "Given the stats of a League of Legends player who participated in a match, provide a detailed analysis of their playstyle. Describe how the player typically approaches the game, including their strengths and weaknesses, preferred strategies, and any notable habits or tendencies. Use the provided stats as evidence to support your analysis. Additionally, provide several relevant tags that capture the essence of the player's style, starting with \"***TAGS***\", separated by commas, and ending with \"***END***\".\n\n" + stats + "\n"
+    response = generate_gpt3_response(prompt)
+    pieces = [piece.strip() for piece in response.split("***TAGS***")]
+    tags = [tag.strip().lower().capitalize() for tag in pieces[1].split(",") if tag.strip() != ""]
+    return pieces[0], tags
+
+def get_opinion_multi(participants):
+    stats = "\n".join([str(participant) for participant in participants])
+    prompt = "Given the stats of a League of Legends players who participated in " + len(participants) + " matches, provide a detailed analysis of their playstyle. Describe how each player typically approaches the game, including their strengths and weaknesses, preferred strategies, and any notable habits or tendencies. Use the provided stats as evidence to support your analysis. Additionally, provide several relevant tags that capture the essence of each player's style, starting with \"***TAGS***\", separated by commas, and ending with \"***END***\".\n\n" + stats + "\n"
     response = generate_gpt3_response(prompt)
     pieces = [piece.strip() for piece in response.split("***TAGS***")]
     tags = [tag.strip().lower().capitalize() for tag in pieces[1].split(",") if tag.strip() != ""]
