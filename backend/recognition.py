@@ -15,10 +15,7 @@ max_tokens = 256
 n = 1
 stop = None
 
-def read_stats(filename):
-    with io.open(f"uploads/{filename}", 'rb') as image_file:
-        content = image_file.read()
-
+def read_stats(content):
     image = vision.Image(content=content)
 
     response = client.text_detection(image=image)
