@@ -403,4 +403,7 @@ def fifa_match_upload_post():
 
     data = read_stats(file_name)
 
+    # delete the file
+    os.remove(os.path.join(app.config["UPLOADED_PHOTOS_DEST"], file_name))
+
     return jsonify(data)
