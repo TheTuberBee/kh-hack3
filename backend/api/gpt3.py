@@ -1,7 +1,6 @@
 import os
 import openai as ai
 import time
-import lol_fetcher
 
 try:
     ai.api_key = os.environ["OPENAI_API_KEY"]
