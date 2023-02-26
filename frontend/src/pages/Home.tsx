@@ -31,7 +31,7 @@ export default function Home() {
         >
           to ESPORT
         </h2>
-        <div className="flex items-center">
+        <div className="flex items-center flex-col lg:flex-row">
           <Link
             to="/leaderboard"
             className={`${

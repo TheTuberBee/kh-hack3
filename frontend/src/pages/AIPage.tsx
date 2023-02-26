@@ -42,6 +42,17 @@ export default function AIPage() {
       <h2 className="text-center text-white font-bold text-lg mb-12">
         Just enter you RIOT ID and we will generate a tag summary for you
       </h2>
+      <div className="absolute top-0 flex justify-left w-full mt-16 lg:mt-24 lg:pl-16">
+        <div
+          className="flex items-center"
+          onClick={() => window.history.back()}
+        >
+          <i className="fas fa-arrow-left text-white text-2xl cursor-pointer mr-2 ml-4 lg:ml-0"></i>
+          <h1 className="text-white font-bold cursor-pointer invisible lg:visible">
+            Back
+          </h1>
+        </div>
+      </div>
       <div className="flex justify-center items-center flex-col lg:flex-row">
         <input
           type="text"
