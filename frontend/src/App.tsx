@@ -18,6 +18,7 @@ import { setCurrentUser, setLoggedIn } from "./redux/actions/authAction";
 import "./index.css";
 import { getCurrentUser } from "./api/auth";
 import AIPage from "./pages/AIPage";
+import ImageRecognizer from "./pages/ImageRecognizer";
 
 function App() {
   const navigate = useNavigate();
@@ -70,6 +71,9 @@ function App() {
         )}
         {state.loggedIn && (
           <Route path="/teamfinder" element={<TeamFinder />} />
+        )}
+        {state.loggedIn && (
+          <Route path="/imagerecognizer" element={<ImageRecognizer />} />
         )}
         {state.loggedIn && <Route path="/aipage" element={<AIPage />} />}
         {state.loggedIn && <Route path="/" element={<Home />} />}

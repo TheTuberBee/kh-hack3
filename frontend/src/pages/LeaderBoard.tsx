@@ -35,7 +35,7 @@ export default function LeaderBoard() {
   const [isTournament, setIsTournament] = useState(false);
 
   const handleOpenModal = (index: number) => {
-    setModalData(Object.values(allPlayers[index]));
+    setModalData(Object.values(allPlayers[index].factors));
     setIsOpen(true);
   };
 
@@ -75,7 +75,6 @@ export default function LeaderBoard() {
           new Date(value[1].toDate()).getTime() / 1000
         );
 
-        console.log(games.find((game) => game.name === gameName).id);
         if (convertedToUnixBegin && convertedToUnixEnd && gameName) {
           getLeaderBoard(
             games.find((game) => game.name === gameName).id,
@@ -100,7 +99,6 @@ export default function LeaderBoard() {
       }
     }
   }, [gameName, games, isTournament, value]);
-
   return (
     <>
       <Modal
@@ -116,9 +114,9 @@ export default function LeaderBoard() {
           >
             Details
           </h1>
-          {modalData && modalData.factors && (
+          {modalData && (
             <>
-              {modalData.factors.map((data: string, index: number) => {
+              {modalData.map((data: string, index: number) => {
                 return (
                   <h2 className="" key={index}>
                     {tags && tags[index]}:{" "}
