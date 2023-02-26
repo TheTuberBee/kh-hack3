@@ -6,7 +6,7 @@ from api.models import *
 from http import HTTPStatus
 import json
 from flask_cors import CORS, cross_origin
-import lol_fetcher as lol
+import api.lol_fetcher as lol
 import gpt3
 import random
 from api.matchmaking import *

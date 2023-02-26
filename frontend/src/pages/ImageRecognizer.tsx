@@ -8,7 +8,7 @@ export default function ImageRecognizer() {
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
     const formData = new FormData();
-    formData.append("selectedFile", selectedFile);
+    formData.append("image", selectedFile);
     try {
       await axios({
         method: "post",
