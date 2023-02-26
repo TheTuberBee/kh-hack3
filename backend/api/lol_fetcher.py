@@ -1,14 +1,8 @@
 import requests
-try:
-    import api.models as models
-except:
-    import models
+import api.models as models
 import os
 import time
-try:
-    import api.gpt3 as gpt3
-except:
-    import gpt3
+import api.gpt3 as gpt3
 import random
 import pickle
 
@@ -181,17 +175,3 @@ def add_simplified_match(match):
 
 # for match in random_matches:
 #     add_simplified_match(match)
-
-
-user = AccountDto.byPUUID("6byl4iaQyoNR5EwD73uYZ_e8pHtuAF_cJvHq6WvpqAZIz83CxhZ55QPlF880dY7DbKL5aw4D4kRTMw")
-print(user.gameName + "#" + user.tagLine)
-
-match_ids = get_match_ids_by_puuid(user.puuid, 0, 10)
-print(match_ids)
-
-match = get_match_by_id(match_ids[0])
-timeline = get_match_timeline_by_id(match_ids[0])
-
-participant = [participant for participant in match["info"]["participants"] if participant.puuid == user.puuid][0]
-
-get_opinion_timeline(participant, timeline)
