@@ -24,6 +24,9 @@ class User(mongo.Document):
     name = mongo.StringField()
     riot_id = mongo.StringField()
     selected_games = mongo.ListField(field = mongo.ReferenceField(document_type = Game))
+    riot_name = mongo.StringField()
+    riot_tagline = mongo.StringField()
+    tags = mongo.ListField(field = mongo.StringField())
 
     class Permissions:
         def __init__(self, claims: dict = {}):
