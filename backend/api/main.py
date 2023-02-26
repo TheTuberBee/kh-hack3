@@ -399,7 +399,8 @@ def teammate_finder_get():
             "email": user.email,
             "killcount": player["factors"][8],
             "deathcount": player["factors"][2],
-            "assistcount": player["factors"][0]
+            "assistcount": player["factors"][0],
+            "tags": user.tags
         })
         index += 1
 
@@ -413,6 +414,7 @@ def teammate_finder_get():
         "killcount": player_data["factors"][8],
         "deathcount": player_data["factors"][2],
         "assistcount": player_data["factors"][0]
+        "tags": user.tags
     })
 
     index = 0
@@ -431,6 +433,7 @@ def teammate_finder_get():
             "killcount": player["factors"][8],
             "deathcount": player["factors"][2],
             "assistcount": player["factors"][0]
+            "tags": user.tags
         })
 
         index += 1
