@@ -38,6 +38,15 @@ function App() {
 
     const getCurrentUser2 = async () => {
       const user: any = await getCurrentUser(uid as string, token as string);
+      if (user.data && user.data.name && user.data.name.length > 0) {
+        localStorage.setItem("name", user.data.name);
+      }
+      if (user.data && user.data.selected_games) {
+        localStorage.setItem(
+          "selected_games",
+          JSON.stringify(user.data.selected_games)
+        );
+      }
       dispatch(setCurrentUser(user.data));
     };
 
