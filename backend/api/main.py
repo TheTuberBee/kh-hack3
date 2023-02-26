@@ -7,7 +7,7 @@ from http import HTTPStatus
 import json
 from flask_cors import CORS, cross_origin
 import api.lol_fetcher as lol
-import gpt3
+import api.gpt3 as gpt3
 import random
 from api.matchmaking import *
 from recognition import *
