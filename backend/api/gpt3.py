@@ -43,15 +43,13 @@ def get_opinion(participant):
     tags = [tag.strip().lower().capitalize() for tag in pieces[1].split(",") if tag.strip() != ""]
     return pieces[0], tags
 
-def get_opinion_timeline(participant, timeline):
-    # get the 1-based index of the participant's puuid in timeline["metadata"]["participants"]
-    puuid = participant["puuid"]
-    puuids = [participant["puuid"] for participant in timeline["metadata"]["participants"]]
-    index = puuids.index(puuid) + 1
-
-    # separate the participant's frames
-    frames = [part_frame["participantFrames"][str(index)] for part_frame in timeline["info"]["frames"] if frame["participantFrames"][str(index)]["participantId"] == index]
-    print(frames)
+def get_opinion_multi(participants):
+    stats = "\n".join([str(participant) for participant in participants])
+    prompt = "Given the stats of a League of Legends players who participated in " + len(participants) + " matches, provide a detailed analysis of their playstyle. Describe how each player typically approaches the game, including their strengths and weaknesses, preferred strategies, and any notable habits or tendencies. Use the provided stats as evidence to support your analysis. Additionally, provide several relevant tags that capture the essence of each player's style, starting with \"***TAGS***\", separated by commas, and ending with \"***END***\".\n\n" + stats + "\n"
+    response = generate_gpt3_response(prompt)
+    pieces = [piece.strip() for piece in response.split("***TAGS***")]
+    tags = [tag.strip().lower().capitalize() for tag in pieces[1].split(",") if tag.strip() != ""]
+    return pieces[0], tags
 
 def combine_tags(tags1: list, tags2: list):
     tags1 = ", ".join(tags1)
