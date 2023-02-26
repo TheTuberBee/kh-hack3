@@ -348,6 +348,7 @@ def teammate_finder_get():
         })
         index += 1
 
+    print(user_id)
     # get player's email from the database
     user = User.objects(pk = user_id)[0]
     print("eljut17")
