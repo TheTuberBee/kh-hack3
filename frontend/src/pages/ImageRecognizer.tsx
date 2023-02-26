@@ -41,13 +41,24 @@ export default function ImageRecognizer() {
 
   return (
     <div className="flex justify-center items-center flex-col">
-      <h1 className="text-center text-white font-bold text-3xl">
+      <h1 className="text-center text-white font-bold mt-6 text-3xl">
         Upload a photo of your FIFA score
       </h1>
       <h2 className="text-center text-white font-bold text-lg">
         Simply take a photo of your score on your device (e.g. PS4, XBOX) and
         upload it here.
       </h2>
+      <div className="absolute top-0 flex justify-left w-full mt-16 lg:mt-24 lg:pl-16">
+        <div
+          className="flex items-center"
+          onClick={() => window.history.back()}
+        >
+          <i className="fas fa-arrow-left text-white text-2xl cursor-pointer mr-2 ml-4 lg:ml-0"></i>
+          <h1 className="text-white font-bold cursor-pointer invisible lg:visible">
+            Back
+          </h1>
+        </div>
+      </div>
       <div
         id="sampledownloadbutton"
         className="flex justify-center items-center flex-col mt-2 mb-6 w-full lg:w-1/2"
