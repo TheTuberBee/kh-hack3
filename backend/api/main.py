@@ -451,6 +451,6 @@ def fifa_match_upload_post():
     if "image" not in request.files:
         return "No image file", HTTPStatus.BAD_REQUEST
 
-    data = read_stats(request.files["image"])
+    data = read_stats(request.files["image"].read())
 
     return jsonify(data)
