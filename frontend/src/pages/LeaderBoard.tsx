@@ -28,7 +28,7 @@ export default function LeaderBoard() {
   const [value, setValue] = useState<DateRange<Dayjs>>([null, null]);
   const [gameName, setGameName] = useState<string>();
   const [games, setGames] = useState<any[]>([]);
-
+  const [loading, setLoading] = useState(false);
   const [allPlayers, setAllPlayers] = useState<any>([]);
   const [modalData, setModalData] = useState<string[]>();
   const [tags, setTags] = useState<string[]>();
@@ -64,6 +64,7 @@ export default function LeaderBoard() {
 
       setTags(response.data.game.factor_names);
       setAllPlayers(response.data.players);
+      setLoading(false);
     };
 
     if (!isTournament) {
@@ -76,6 +77,7 @@ export default function LeaderBoard() {
         );
 
         if (convertedToUnixBegin && convertedToUnixEnd && gameName) {
+          setLoading(true);
           getLeaderBoard(
             games.find((game) => game.name === gameName).id,
             convertedToUnixBegin,
@@ -90,7 +92,7 @@ export default function LeaderBoard() {
             1000
         );
         const unixEndNow = Math.floor(new Date().getTime() / 1000);
-
+        setLoading(true);
         getLeaderBoard(
           games.find((game) => game.name === gameName).id,
           unixBeginOneMonthEarlier,
@@ -250,32 +252,32 @@ export default function LeaderBoard() {
           <div className="overflow-x-auto">
             <div className="p-1.5 w-full inline-block align-middle">
               <div className="overflow-hidden border rounded-lg">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-xs font-bold text-left text-cyan-900 uppercase "
-                      >
-                        Rank
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-xs font-bold text-left text-cyan-900 uppercase "
-                      >
-                        Name
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-xs font-bold text-left text-cyan-900 uppercase "
-                      >
-                        Rating
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200">
-                    {allPlayers && allPlayers.length > 0 ? (
-                      allPlayers.map((player: any, index: number) => (
+                {allPlayers && allPlayers.length > 0 ? (
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th
+                          scope="col"
+                          className="px-6 py-3 text-xs font-bold text-left text-cyan-900 uppercase "
+                        >
+                          Rank
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-6 py-3 text-xs font-bold text-left text-cyan-900 uppercase "
+                        >
+                          Name
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-6 py-3 text-xs font-bold text-left text-cyan-900 uppercase "
+                        >
+                          Rating
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {allPlayers.map((player: any, index: number) => (
                         <tr
                           className="cursor-pointer hover:bg-sky-800"
                           onClick={() => handleOpenModal(index)}
@@ -291,12 +293,16 @@ export default function LeaderBoard() {
                             {player.rating}
                           </td>
                         </tr>
-                      ))
-                    ) : (
-                      <h1 className="text-white font-bold mt-3">No data</h1>
-                    )}
-                  </tbody>
-                </table>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <div className="flex justify-center items-center w-full h-12">
+                    <h1 className="text-white text-2xl font-bold">
+                      {loading ? "Loading..." : "No players found"}
+                    </h1>
+                  </div>
+                )}
               </div>
             </div>
           </div>
