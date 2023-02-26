@@ -1,7 +1,6 @@
 import os
 import openai as ai
 import time
-import lol_fetcher
 
 try:
     ai.api_key = os.environ["OPENAI_API_KEY"]
@@ -18,7 +17,7 @@ def generate_gpt3_response(user_text, print_output=False):
 
     completions = ai.Completion.create(
         engine='text-davinci-003',  # Determines the quality, speed, and cost.
-        temperature=0.4,            # Level of creativity in the response
+        temperature=0.35,            # Level of creativity in the response
         prompt=user_text,           # What the user typed in
         max_tokens=600,             # Maximum tokens in the prompt AND response
         n=1,                        # The number of completions to generate

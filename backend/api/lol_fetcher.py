@@ -4,7 +4,6 @@ import os
 import time
 import api.gpt3 as gpt3
 import random
-import pickle
 
 api_domain = "https://europe.api.riotgames.com"
 try:
