@@ -303,8 +303,7 @@ def teammate_finder_get():
     player_data = None
 
     index = 0
-    before_player = []
-    after_player = []
+    print("eljut12")
     # find the player in the all_players_data
     for player in all_players_data:
         if player["id"] == user_id:
@@ -330,6 +329,7 @@ def teammate_finder_get():
         if index >= 5:
             break
 
+        print(player)
         # get user's email from the database using the player's id
         user = User.objects(pk = player["id"])[0]
 
