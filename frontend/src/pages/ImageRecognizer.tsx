@@ -76,7 +76,7 @@ export default function ImageRecognizer() {
         className="flex justify-center items-center flex-col mt-2 mb-6 w-full lg:w-1/2"
       >
         <a
-          href="https://i.ibb.co/d6WGvBF/Screenshot-2023-02-26-074512.png"
+          href="https://i.ibb.co/4jBS9XS/IMG-20230225-233714.jpg"
           download="sample_fifa_score.jpg"
           className="p-2 px-4 text-white font-bold rounded-lg mt-5 uppercase bg-blue-800 hover:bg-blue-900"
           target="_blank"
