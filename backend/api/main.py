@@ -294,12 +294,12 @@ def fix():
 @cross_origin()
 def teammate_finder_get():
     # authenticate
-    perms = authenticate()
+    # perms = authenticate()
 
     # if perms.user_id is None:
     #   return "Unauthorized.", HTTPStatus.UNAUTHORIZED
-
-    user_id = perms.user_id
+    
+    user_id: str = request.args.get("user_id", type = str)
 
     def player_filter(player): return True
     def match_filter(match): return True
@@ -311,10 +311,8 @@ def teammate_finder_get():
     player_data = None
 
     index = 0
-
     before_player = []
     after_player = []
-
     # find the player in the all_players_data
     for player in all_players_data:
         if player["id"] == user_id:
@@ -340,7 +338,7 @@ def teammate_finder_get():
             break
 
         # get user's email from the database using the player's id
-        user = User.objects(pk=player["id"])[0]
+        user = User.objects(pk = player["id"])[0]
 
         players.append({
             "name": player["name"],
@@ -354,7 +352,6 @@ def teammate_finder_get():
 
     # get player's email from the database
     user = User.objects(pk=user_id)[0]
-
     # add the player
     players.append({
         "name": "You",
@@ -366,7 +363,6 @@ def teammate_finder_get():
     })
 
     index = 0
-
     # add the players after the player
     for player in after_player:
         if index >= 5:
