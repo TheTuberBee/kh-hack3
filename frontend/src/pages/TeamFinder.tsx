@@ -186,7 +186,7 @@ export default function TeamFinder() {
         </div>
 
         <div className="flex justify-center items-center flex-col mt-12 w-full lg:w-1/2 ">
-          {people.length > 0
+          {people && people.length > 0
             ? people.map((person, index) => (
                 <div
                   key={index}
