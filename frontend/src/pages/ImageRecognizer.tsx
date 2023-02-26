@@ -5,12 +5,14 @@ export default function ImageRecognizer() {
   const [fileName, setFileName] = useState<string>("No file selected");
   const [selectedFile, setSelectedFile] = useState<any>();
   const [loading, setLoading] = useState<boolean>(false);
-  const [team1, setTeam1] = useState<string>("");
-  const [team2, setTeam2] = useState<string>("");
-  const [score1, setScore1] = useState<string>("");
-  const [score2, setScore2] = useState<string>("");
+  const [team1, setTeam1] = useState<string | null>(null);
+  const [team2, setTeam2] = useState<string | null>(null);
+  const [score1, setScore1] = useState<string | null>(null);
+  const [score2, setScore2] = useState<string | null>(null);
+  const [searched, setSearched] = useState<boolean>(false);
 
   const handleSubmit = async (event: { preventDefault: () => void }) => {
+    setSearched(true);
     setLoading(true);
     event.preventDefault();
     const formData = new FormData();
@@ -22,7 +24,17 @@ export default function ImageRecognizer() {
         data: formData,
         headers: { "Content-Type": "multipart/form-data" },
       });
+
+      let toParseData = request.data;
+      if (toParseData.startsWith("ANSWER:")) {
+        toParseData = toParseData.substring(7);
+      }
+      if (toParseData.startsWith("END")) {
+        toParseData = toParseData.substring(3);
+      }
+
       const obj = JSON.parse(request.data);
+
       setTeam1(obj.team1);
       setTeam2(obj.team2);
       setScore1(obj.score1);
@@ -107,7 +119,7 @@ export default function ImageRecognizer() {
         </div>
       )}
 
-      {team1 && team2 && score1 && score2 && (
+      {team1 != null && team2 != null && score1 != null && score2 != null ? (
         <div className="flex justify-center items-center border-2 border-white rounded-lg p-2 flex-col mt-12 w-full lg:w-1/3">
           <h1 className="text-white font-bold text-center text-2xl mb-2">
             Your results are here and approved{" "}
@@ -126,6 +138,15 @@ export default function ImageRecognizer() {
             <span className="font-bold">Score 2:</span> {score2}
           </p>
         </div>
+      ) : (
+        searched &&
+        !loading && (
+          <div className="flex justify-center items-center border-2 border-white rounded-lg p-2 flex-col mt-12 w-full lg:w-1/3">
+            <h1 className="text-white font-bold text-center text-2xl mb-2">
+              Please take a more clear photo of your score
+            </h1>
+          </div>
+        )
       )}
     </div>
   );
