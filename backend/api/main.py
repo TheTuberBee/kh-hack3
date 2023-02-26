@@ -132,11 +132,32 @@ def user_get(id):
         return "Unauthorized.", HTTPStatus.UNAUTHORIZED
     
     user = perms.get_user()
+
+    matches = []
+    for match in Match.objects:
+        match: Match
+        if user in match.team_a_players:
+            i = match.team_a_stats.index(user)
+            stats = match.team_a_stats[i]
+            winrate = match.result
+        elif user in match.team_b_players:
+            i = match.team_b_stats.index(user)
+            stats = match.team_b_stats[i]
+            winrate = 1 - match.result
+        else: continue
+
+        matches.append({
+            "game": match.game.pk,
+            "winrate": winrate,
+            "factors": stats,
+        })
+
     return {
         "email": user.email,
         "name": user.name,
         "staff": user.staff,
-        "selected_games": user.selected_games
+        "selected_games": user.selected_games,
+        "matches": matches
     }
 
 
