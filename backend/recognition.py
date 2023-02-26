@@ -1,10 +1,12 @@
 from google.cloud import vision
 import io
 client = vision.ImageAnnotatorClient()
+import dotenv
 
 import openai
 
-openai.api_key = "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"
+# get api key from .env
+openai.api_key = dotenv.get_key(".env", "OPENAI_API_KEY")
 
 engine = "text-davinci-003"
 prompt = 'you get some texts, 2 of them are soccer team names (eg. Real Madrid). you can combine multiple words if needed. you also need to find the scores. the original text looks like this: "{TEAM1} {SCORE1} - {SCORE2} {TEAM2}".  return only this structure: {"team1": team1, "team2": team2, "score1", "score2"}'
