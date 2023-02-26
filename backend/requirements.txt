@@ -3,3 +3,6 @@ flask-mongoengine
 py-bcrypt
 pyjwt
 flask_cors
+flask-reuploaded
+openai
+google-cloud-vision

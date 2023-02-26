@@ -75,7 +75,6 @@ export default function LeaderBoard() {
           new Date(value[1].toDate()).getTime() / 1000
         );
 
-        console.log(games.find((game) => game.name === gameName).id);
         if (convertedToUnixBegin && convertedToUnixEnd && gameName) {
           getLeaderBoard(
             games.find((game) => game.name === gameName).id,
@@ -100,7 +99,6 @@ export default function LeaderBoard() {
       }
     }
   }, [gameName, games, isTournament, value]);
-
   return (
     <>
       <Modal

@@ -3,11 +3,23 @@ import { getAIResponse } from "../api/leaderboard";
 
 export default function AIPage() {
   const [generatedText, setGeneratedText] = useState<string>("");
+  const [buttonClicked, setButtonClicked] = useState<boolean>(false);
+  const [countDown, setCountDown] = useState<number>(30);
 
   const handleGeneration = async () => {
+    setButtonClicked(true);
+
+    const interval = window.setInterval(() => {
+      if (countDown > 0) {
+        setCountDown((prev) => prev - 1);
+      }
+    }, 1000);
+
     const response: any = getAIResponse(123, generatedText);
 
     setGeneratedText(response.data);
+    setButtonClicked(false);
+    return () => window.clearInterval(interval);
   };
 
   return (
@@ -28,6 +40,12 @@ export default function AIPage() {
           Generate
         </button>
       </div>
+      {buttonClicked && (
+        <div className="flex justify-center items-center flex-col mt-12 w-full lg:w-1/2">
+          <p className="text-white text-lg">Generating...</p>
+          <p className="text-white text-lg">Time left: {countDown}</p>
+        </div>
+      )}
       {generatedText.length > 0 && (
         <div
           id="longtextcontainer"

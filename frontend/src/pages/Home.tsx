@@ -31,14 +31,24 @@ export default function Home() {
         >
           to ESPORT
         </h2>
-        <Link
-          to="/leaderboard"
-          className={`${
-            firstLoad.current && "fadeRight"
-          } p-4 px-6 text-white font-bold rounded-lg mt-5 uppercase bg-blue-800 hover:p-5 hover:px-7 hover:bg-blue-900`}
-        >
-          Check out the board
-        </Link>
+        <div className="flex items-center">
+          <Link
+            to="/leaderboard"
+            className={`${
+              firstLoad.current && "fadeRight"
+            } p-4 px-6 text-white font-bold rounded-lg mt-5 uppercase mr-3 bg-blue-800 hover:p-5 hover:px-7 hover:bg-blue-900`}
+          >
+            Check out the board
+          </Link>
+          <Link
+            to="/imagerecognizer"
+            className={`${
+              firstLoad.current && "fadeLeft"
+            } p-4 px-6 text-white font-bold rounded-lg mt-5 uppercase bg-blue-800 hover:p-5 hover:px-7 hover:bg-blue-900`}
+          >
+            Scan your score with AI
+          </Link>
+        </div>
       </div>
       <Footer firstLoad={firstLoad.current} />
       <AICircle />
