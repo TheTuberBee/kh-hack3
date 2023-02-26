@@ -8,11 +8,7 @@ except:
     ai.api_key = input("OpenAI API Key: ")
 
 def generate_gpt3_response(user_text, print_output=False):
-    """
-    Query OpenAI GPT-3 for the specific key and get back a response
-    :type user_text: str the user's text to query for
-    :type print_output: boolean whether or not to print the raw output JSON
-    """
+    
     start_time = time.time()
 
     completions = ai.Completion.create(
