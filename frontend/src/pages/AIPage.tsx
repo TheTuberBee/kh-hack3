@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getAIResponse } from "../api/leaderboard";
 
 export default function AIPage() {
@@ -7,7 +7,17 @@ export default function AIPage() {
   const [countDown, setCountDown] = useState<number>(30);
   const [name, setName] = useState("");
 
+  useEffect(() => {
+    if (countDown <= 0 && generatedText.length === 0) {
+      setButtonClicked(false);
+      setGeneratedText(
+        "Sorry, we couldn't generate a summary for you. Please try again later."
+      );
+    }
+  }, [countDown, generatedText.length]);
+
   const handleGeneration = async () => {
+    setCountDown(30);
     setButtonClicked(true);
 
     const interval = window.setInterval(() => {
@@ -16,23 +26,27 @@ export default function AIPage() {
       }
     }, 1000);
 
-    const response: any = getAIResponse(123, name);
+    getAIResponse(123, name).then((response: any) => {
+      setGeneratedText(response?.data.data);
+      setButtonClicked(false);
+    });
 
-    setGeneratedText(response.data);
-    setButtonClicked(false);
     return () => window.clearInterval(interval);
   };
 
   return (
     <div className="flex justify-center items-center flex-col">
-      <h1 className="text-center text-white font-bold text-4xl my-12 uppercase">
+      <h1 className="text-center text-white font-bold text-4xl mt-12 mb-2 uppercase">
         AI generated summary
       </h1>
+      <h2 className="text-center text-white font-bold text-lg mb-12">
+        Just enter you RIOT ID and we will generate a tag summary for you
+      </h2>
       <div className="flex justify-center items-center flex-col lg:flex-row">
         <input
           type="text"
           className="mr-4 text-center text-white text-lg w-96 h-10 mt-12 bg-transparent rounded-lg pl-4 border-b-4 border-white focus:outline-none placeholder:text-white mx-3 lg:mx-0 lg:mr-5"
-          placeholder="Enter your RIOT ID"
+          placeholder="RIOT ID (e.g. needcuddles#Hema2)"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
@@ -49,7 +63,7 @@ export default function AIPage() {
           <p className="text-white text-lg">Time left: {countDown}</p>
         </div>
       )}
-      {generatedText.length > 0 && (
+      {generatedText && generatedText.length > 0 && (
         <div
           id="longtextcontainer"
           className="flex items-center mt-12 w-full lg:w-1/2 border border-white border-2 rounded-lg p-5"
