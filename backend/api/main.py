@@ -208,7 +208,6 @@ def leaderboard_get():
                          game, tournament=tournament)
     return data
 
-
 @app.get("/games")
 @cross_origin()
 def games_get():
