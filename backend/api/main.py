@@ -464,12 +464,6 @@ def fifa_match_upload_post():
     if "image" not in request.files:
         return "No image file", HTTPStatus.BAD_REQUEST
 
-    # get file from request and save it to /uploads
-    file_name = photos.save(request.files["image"])
-
-    data = read_stats(file_name)
-
-    # delete the file
-    os.remove(os.path.join(app.config["UPLOADED_PHOTOS_DEST"], file_name))
+    data = read_stats(request.files["image"].read())
 
     return jsonify(data)

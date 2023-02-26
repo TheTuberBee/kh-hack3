@@ -46,7 +46,7 @@ export default function TeamFinder() {
   const [name, setName] = useState("");
   const [people, setPeople] = useState<any[]>([]);
   const [searched, setSearched] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(false);
   const [modalData, setModalData] = useState<any>();
 
   const handleOpenModal = (id: number) => {
@@ -55,6 +55,8 @@ export default function TeamFinder() {
   };
 
   const handleSearch = async () => {
+    setPeople([]);
+    setIsLoading(true);
     setSearched(true);
     const response: any = await getPossibleFriends();
 
@@ -65,11 +67,12 @@ export default function TeamFinder() {
     }
 
     if (name.length > 0) {
-      const found = people.filter((person: any) =>
+      const found = response.data.filter((person: any) =>
         person.name.toLowerCase().includes(name)
       );
       setPeople(found.length > 0 ? found : []);
     }
+    setIsLoading(false);
   };
 
   return (
@@ -210,7 +213,7 @@ export default function TeamFinder() {
               ))
             : searched && (
                 <p className="text-center text-white font-bold">
-                  No teammate was found
+                  {isLoading ? "Loading players..." : "No people found"}
                 </p>
               )}
         </div>
