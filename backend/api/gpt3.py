@@ -1,6 +1,8 @@
 import os
 import openai as ai
 import time
+import lol_fetcher
+
 try:
     ai.api_key = os.environ["OPENAI_API_KEY"]
 except:
@@ -40,6 +42,16 @@ def get_opinion(participant):
     pieces = [piece.strip() for piece in response.split("***TAGS***")]
     tags = [tag.strip().lower().capitalize() for tag in pieces[1].split(",") if tag.strip() != ""]
     return pieces[0], tags
+
+def get_opinion_timeline(participant, timeline):
+    # get the 1-based index of the participant's puuid in timeline["metadata"]["participants"]
+    puuid = participant["puuid"]
+    puuids = [participant["puuid"] for participant in timeline["metadata"]["participants"]]
+    index = puuids.index(puuid) + 1
+
+    # separate the participant's frames
+    frames = [part_frame["participantFrames"][str(index)] for part_frame in timeline["info"]["frames"] if frame["participantFrames"][str(index)]["participantId"] == index]
+    print(frames)
 
 def combine_tags(tags1: list, tags2: list):
     tags1 = ", ".join(tags1)
