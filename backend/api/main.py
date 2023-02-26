@@ -324,6 +324,8 @@ def teammate_finder_get():
     players = []
 
     index = 0
+
+    print(before_player)
     # add the players before the player
     for player in before_player:
         if index >= 5:
