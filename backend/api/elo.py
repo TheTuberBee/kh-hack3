@@ -1,10 +1,54 @@
 import math
 
-def _avg(values: list[int]) -> float:
-    return sum(values) / len(values)
+def _avg(values: list[int]):
+    n = 0
+    sum = 0
+    for value in values:
+        if value is not None:
+            n += 1
+            sum += value
+    try:
+        return sum / n
+    except ZeroDivisionError:
+        return None
+    
+def _remove_unknowns(values1: list[int], values2: list[int]):
+    n = 0
+    sum = 0
+    
+    for value in values1 + values2:
+        if value is not None:
+            n += 1
+            sum += value
+
+    if n == 0:
+        return [None], [None]
+    
+    avg = sum / n
+
+    new1 = []
+    for value in values1:
+        if value is None:
+            new1.append(avg)
+        else:
+            new1.append(value)
+
+    new2 = []
+    for value in values2:
+        if value is None:
+            new2.append(avg)
+        else:
+            new2.append(value)
+
+    return new1, new2
 
 # Predicts the chance of Team A winning
 def _prediction(team_a: list[int], team_b: list[int]) -> float:
+    a, b = _remove_unknowns(team_a, team_b)
+    avg_a = _avg(a)
+    avg_b = _avg(b)
+    if avg_a is None or avg_b is None:
+        return 0.5
     return 1 / (1 + (10.0 ** ((_avg(team_b) - _avg(team_a)) / 400)))
 
 # Calculates the outcome
@@ -13,7 +57,7 @@ def _result(team: int, opponent: int) -> float:
 
 # Calculates the average ΔScore for one team
 def _delta_team_score(result: float, prediction: float, team_size: int) -> float:
-    return 64 * team_size * (result - prediction)
+    return 256 * team_size * (result - prediction)
 
 def _player_value(stats: list[float], game: list[float]) -> float:
     sum = 0

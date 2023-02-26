@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { login } from "../api/auth";
-import { useSelector } from "react-redux";
+import { getCurrentUser, login } from "../api/auth";
+import { useSelector, useDispatch } from "react-redux";
+import { setCurrentUser, setLoggedIn } from "../redux/actions/authAction";
 
 export default function Login() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
@@ -25,12 +27,23 @@ export default function Login() {
       setError("");
     }
 
-    const loginResponse = await login(email, password);
+    const loginResponse: any = await login(email, password);
 
-    if (loginResponse.status < 400) {
-      navigate("/");
+    if (
+      loginResponse.status < 400 &&
+      loginResponse.data &&
+      loginResponse.data.user_id
+    ) {
+      localStorage.setItem("uid", loginResponse.data.user_id);
+      localStorage.setItem("token", loginResponse.data.token);
+      const user: any = await getCurrentUser(
+        loginResponse.data.user_id,
+        loginResponse.data.token
+      );
+      dispatch(setCurrentUser(user.data));
+      dispatch(setLoggedIn(true));
     } else {
-      setError(loginResponse.data);
+      setError("Wrong email or password");
     }
   };
 

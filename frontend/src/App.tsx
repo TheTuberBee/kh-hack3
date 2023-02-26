@@ -11,26 +11,14 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import { setLoggedIn, setToken } from "./redux/actions/authAction";
 import Profile from "./pages/Profile";
 import LeaderBoard from "./pages/LeaderBoard";
 import TeamFinder from "./pages/TeamFinder";
+import { setCurrentUser, setLoggedIn } from "./redux/actions/authAction";
 import "./index.css";
-
-function getCookie(cname: string) {
-  let name = cname + "=";
-  let ca = document.cookie.split(";");
-  for (let i = 0; i < ca.length; i++) {
-    let c = ca[i];
-    while (c.charAt(0) === " ") {
-      c = c.substring(1);
-    }
-    if (c.indexOf(name) === 0) {
-      return c.substring(name.length, c.length);
-    }
-  }
-  return "";
-}
+import { getCurrentUser } from "./api/auth";
+import AIPage from "./pages/AIPage";
+import ImageRecognizer from "./pages/ImageRecognizer";
 
 function App() {
   const navigate = useNavigate();
@@ -38,16 +26,36 @@ function App() {
   const dispatch = useDispatch();
   const state: any = useSelector((state) => state);
 
-  useEffect(() => {
-    const token = getCookie("token");
+  const element = document.querySelector(".MuiPickerStaticWrapper-content");
+  const child = element?.firstChild;
+  const secondChild = child?.firstChild;
+  const newDiv = document.createElement("div");
+  secondChild?.replaceWith(newDiv);
 
-    if (token !== "") {
-      dispatch(setToken(token));
+  useEffect(() => {
+    const uid = localStorage.getItem("uid");
+    const token = localStorage.getItem("token");
+
+    const getCurrentUser2 = async () => {
+      const user: any = await getCurrentUser(uid as string, token as string);
+      dispatch(setCurrentUser(user.data));
+    };
+
+    if (!state.currentUser && uid) {
+      getCurrentUser2();
+    }
+  }, [dispatch, state.currentUser]);
+
+  useEffect(() => {
+    const uid = localStorage.getItem("uid");
+    if (uid) {
       dispatch(setLoggedIn(true));
-    } else {
-      if (location.pathname !== "/login" && location.pathname !== "/register") {
-        navigate("/login");
-      }
+    } else if (
+      location.pathname !== "/login" &&
+      location.pathname !== "/register"
+    ) {
+      dispatch(setLoggedIn(false));
+      navigate("/login");
     }
   }, [dispatch, location.pathname, navigate]);
 
@@ -64,8 +72,15 @@ function App() {
         {state.loggedIn && (
           <Route path="/teamfinder" element={<TeamFinder />} />
         )}
+        {state.loggedIn && (
+          <Route path="/imagerecognizer" element={<ImageRecognizer />} />
+        )}
+        {state.loggedIn && <Route path="/aipage" element={<AIPage />} />}
         {state.loggedIn && <Route path="/" element={<Home />} />}
-        <Route path="*" element={<Navigate to="/" />} />
+        <Route
+          path="*"
+          element={<Navigate to={state.loggedIn ? "/" : "/login"} />}
+        />
       </Routes>
     </>
   );

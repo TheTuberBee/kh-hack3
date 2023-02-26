@@ -8,7 +8,7 @@ export const login = async (email: string, password: string) => {
 
     return response;
   } catch (error) {
-    throw error;
+    return error;
   }
 };
 
@@ -31,6 +31,24 @@ export const register = async (
       return response;
     }
   } catch (error) {
-    throw error;
+    return error;
+  }
+};
+
+export const getCurrentUser = async (uid: string, token?: string) => {
+  try {
+    if (token) {
+      const response = await axios.get("/user/" + uid, {
+        headers: { Authorization: "Bearer " + token },
+      });
+
+      return response;
+    } else {
+      const response = await axios.get("/user/" + uid);
+
+      return response;
+    }
+  } catch (error) {
+    return error;
   }
 };
