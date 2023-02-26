@@ -8,13 +8,13 @@ export default function AIPage() {
   const [name, setName] = useState("");
 
   useEffect(() => {
-    if (countDown <= 0) {
+    if (countDown <= 0 && generatedText.length === 0) {
       setButtonClicked(false);
       setGeneratedText(
         "Sorry, we couldn't generate a summary for you. Please try again later."
       );
     }
-  }, [countDown]);
+  }, [countDown, generatedText.length]);
 
   const handleGeneration = async () => {
     setCountDown(30);
@@ -36,9 +36,12 @@ export default function AIPage() {
 
   return (
     <div className="flex justify-center items-center flex-col">
-      <h1 className="text-center text-white font-bold text-4xl my-12 uppercase">
+      <h1 className="text-center text-white font-bold text-4xl mt-12 mb-2 uppercase">
         AI generated summary
       </h1>
+      <h2 className="text-center text-white font-bold text-lg mb-12">
+        Just enter you RIOT ID and we will generate a tag summary for you
+      </h2>
       <div className="flex justify-center items-center flex-col lg:flex-row">
         <input
           type="text"
