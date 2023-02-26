@@ -285,16 +285,15 @@ def fix():
 @cross_origin()
 def teammate_finder_get():
     # authenticate
-    perms = authenticate()
+    # perms = authenticate()
 
     #if perms.user_id is None:
     #   return "Unauthorized.", HTTPStatus.UNAUTHORIZED
     
-    user_id = perms.user_id
+    user_id: str = request.args.get("user_id", type = str)
 
     player_filter = lambda player: True
     match_filter = lambda match: True
-    print("eljut1")
     game = Game.objects(pk = "63fa20423cab53f5ff515119")[0]
 
     all_players_data = Match.analyze(player_filter, match_filter, game)["players"]
@@ -316,7 +315,6 @@ def teammate_finder_get():
             break
         index += 1
 
-    print("eljut13")
     # create the data for the frontend list
     # data needed: name, elo, email, killcount, deathcount, assistcount
 
@@ -332,7 +330,6 @@ def teammate_finder_get():
         # get user's email from the database using the player's id
         user = User.objects(pk = player["id"])[0]
 
-        print("eljut14")
         players.append({
             "name": player["name"],
             "elo": player["rating"],
@@ -345,7 +342,6 @@ def teammate_finder_get():
 
     # get player's email from the database
     user = User.objects(pk = user_id)[0]
-    print("eljut17")
     # add the player
     players.append({
         "name": "You",
@@ -357,7 +353,6 @@ def teammate_finder_get():
     })
 
     index = 0
-    print("eljut6")
     # add the players after the player 
     for player in after_player:  
         if index >= 5:
