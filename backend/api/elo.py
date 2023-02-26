@@ -57,7 +57,7 @@ def _result(team: int, opponent: int) -> float:
 
 # Calculates the average ΔScore for one team
 def _delta_team_score(result: float, prediction: float, team_size: int) -> float:
-    return 64 * team_size * (result - prediction)
+    return 256 * team_size * (result - prediction)
 
 def _player_value(stats: list[float], game: list[float]) -> float:
     sum = 0
