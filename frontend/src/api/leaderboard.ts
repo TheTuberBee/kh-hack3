@@ -39,9 +39,18 @@ export const getAIResponse = async (gameId: number, userId: string) => {
 
 export const getPossibleFriends = async () => {
   try {
-    const response = await axios.get("/teammate_finder");
+    const ui = localStorage.getItem("uid");
+    if (ui) {
+      const response = await axios.get("/teammate_finder", {
+        params: {
+          user_id: ui,
+        },
+      });
 
-    return response;
+      return response;
+    } else {
+      return null;
+    }
   } catch (error) {
     return error;
   }
